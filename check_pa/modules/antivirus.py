@@ -53,8 +53,14 @@ class Antivirus(np.Resource):
         _log.info('Reading XML from: %s', self.xml_obj.build_request_url())
         soup = self.xml_obj.read()
         result = soup.result
-        av_release_date = str(Finder.find_item(result, 'av-release-date'))
-        av_version = int(Finder.find_item(result, 'av-version'))
+        av_release_date = Finder.find_item(result, 'av-release-date').split(' ')[0]
+        # 2019/01/06  04:03:50
+        date_object = datetime.strptime(av_release_date, '%Y/%m/%d')
+        av_version = Finder.find_item(result, 'av-version')
+
+        difference = date_object - get_now()
+        _log.info('Difference: %s days', difference.days)
+
 
         return [np.Metric('av_release_date', av_release_date, context='av-release-date'),
             np.Metric('av_version', av_version, context='av-version')]
