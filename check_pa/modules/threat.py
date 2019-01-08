@@ -28,7 +28,7 @@ def create_check(args):
     return np.Check(
         Threat(args.host, args.token),
         np.ScalarContext('threat-release-days', args.warn, args.crit),
-        ThreatsSummary())
+        ThreatSummary())
 
 
 class Threat(np.Resource):
