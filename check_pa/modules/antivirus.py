@@ -38,7 +38,7 @@ class Antivirus(np.Resource):
     and critical (e. g. 2).
     """
 
-    def __init__(self, host, token, exclude):
+    def __init__(self, host, token):
         self.host = host
         self.token = token
         self.cmd = '<show><system><info></info></system></show>'
