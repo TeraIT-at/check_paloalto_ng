@@ -166,7 +166,7 @@ def parse_args(args):
     parser_antivirus = subparsers.add_parser(
         'antivirus',
         help='check antivirus informations.')
-    parser_sessinfo.set_defaults(func=antivirus)
+    parser_antivirus.set_defaults(func=antivirus)
 
 
     return parser.parse_args(args)
