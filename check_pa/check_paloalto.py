@@ -166,6 +166,15 @@ def parse_args(args):
     parser_antivirus = subparsers.add_parser(
         'antivirus',
         help='check antivirus informations.')
+    parser_antivirus.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=2,
+        help='Warning if antivirus definition date is older. In days (default: %(default)s)')
+    parser_antivirus.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=4,
+        help='Critical if antivirus definition date is older. In days (default: %(default)s)')
+
     parser_antivirus.set_defaults(func=antivirus)
 
 

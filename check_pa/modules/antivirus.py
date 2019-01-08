@@ -27,7 +27,7 @@ def create_check(args):
     """
     return np.Check(
         Antivirus(args.host, args.token),
-        np.ScalarContext('av-release-days'),
+        np.ScalarContext('av-release-days', args.warn, args.crit),
         AntivirusSummary())
 
 
