@@ -56,12 +56,12 @@ class Antivirus(np.Resource):
         result = soup.result
         av_release_date = Finder.find_item(result, 'av-release-date').split(' ')[0]
         # 2019/01/06  04:03:50
+        now = get_now()
         date_object = datetime.strptime(av_release_date, '%Y/%m/%d')
         av_version = Finder.find_item(result, 'av-version')
 
-        difference = date_object - get_now()
-        _log.info('Difference: %s days', difference.days)
-
+        difference = now - date_object
+        _log.info('Difference: %s days (%s -- %s)'  % (difference.days, av_release_date, get_now()))
 
         return [np.Metric('av_release_date', av_release_date, context='av-release-date'),
             np.Metric('av_version', av_version, context='av-version')]
