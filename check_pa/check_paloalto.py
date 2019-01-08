@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat
 
 
 @nagiosplugin.guarded
@@ -174,9 +174,21 @@ def parse_args(args):
         '-c', '--crit',
         metavar='CRIT', type=int, default=4,
         help='Critical if antivirus definition date is older. In days (default: %(default)s)')
-
     parser_antivirus.set_defaults(func=antivirus)
 
+    # Sub-Parser for command 'threat'.
+    parser_threat = subparsers.add_parser(
+        'threat',
+        help='check threat informations.')
+    parser_threat.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=5,
+        help='Warning if threat definition date is older. In days (default: %(default)s)')
+    parser_threat.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=10,
+        help='Critical if threat definition date is older. In days (default: %(default)s)')
+    parser_threat.set_defaults(func=threat)
 
     return parser.parse_args(args)
 
