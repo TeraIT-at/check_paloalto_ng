@@ -56,7 +56,7 @@ class Threat(np.Resource):
         threat_release_date = Finder.find_item(result, 'threat-release-date').split(' ')[0]
         # 2019/01/06  04:03:50
         now = get_now()
-        date_object = datetime.strptime(av_release_date, '%Y/%m/%d')
+        date_object = datetime.strptime(threat_release_date, '%Y/%m/%d')
 
         difference = now - date_object
         _log.info('Difference: %s days (%s -- %s)'  % (difference.days, threat_release_date, now))
