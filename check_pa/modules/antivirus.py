@@ -53,11 +53,11 @@ class Antivirus(np.Resource):
         _log.info('Reading XML from: %s', self.xml_obj.build_request_url())
         soup = self.xml_obj.read()
         result = soup.result
-        av-release-date = str(Finder.find_item(result, 'av-release-date'))
-        av-version = int(Finder.find_item(result, 'av-version'))
+        av_release_date = str(Finder.find_item(result, 'av-release-date'))
+        av_version = int(Finder.find_item(result, 'av-version'))
 
-        return [np.Metric('av-release-date', av-release-date, context='av-release-date'),
-            np.Metric('av-version', throughput, context='av-version')]
+        return [np.Metric('av_release_date', av_release_date, context='av-release-date'),
+            np.Metric('av_version', av_version, context='av-version')]
 
 
 
