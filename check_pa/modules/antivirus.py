@@ -27,8 +27,7 @@ def create_check(args):
     """
     return np.Check(
         Antivirus(args.host, args.token),
-        np.ScalarContext('av-release-date'),
-        np.ScalarContext('av-version'),
+        np.ScalarContext('av-release-days'),
         AntivirusSummary())
 
 
@@ -63,9 +62,7 @@ class Antivirus(np.Resource):
         difference = now - date_object
         _log.info('Difference: %s days (%s -- %s)'  % (difference.days, av_release_date, get_now()))
 
-        return [np.Metric('av_release_date', av_release_date, context='av-release-date'),
-            np.Metric('av_version', av_version, context='av-version')]
-
+        return [np.Metric('av-release-days', difference.days, context='av-release-days')]
 
 
 class AntivirusSummary(np.Summary):
