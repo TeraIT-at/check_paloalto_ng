@@ -3,6 +3,7 @@
 import logging
 
 import nagiosplugin as np
+from datetime import datetime
 
 from check_pa.xml_reader import XMLReader, Finder
 
