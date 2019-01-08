@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus
 
 
 @nagiosplugin.guarded
@@ -38,7 +38,7 @@ def parse_args(args):
 
     info = parser.add_argument_group('Info')
     info.add_argument('--version', action='version',
-                      version='%(prog)s 0.3.2')
+                      version='%(prog)s 0.3.3')
 
     subparsers = parser.add_subparsers(dest='command')
     subparsers.required = True
@@ -161,6 +161,13 @@ def parse_args(args):
         metavar='CRIT', type=int, default=9000000000,
         help='Critical if throughput is greater. In bps (default: %(default)s)')
     parser_throughput.set_defaults(func=throughput)
+
+    # Sub-Parser for command 'antivirus'.
+    parser_antivirus = subparsers.add_parser(
+        'antivirus',
+        help='check antivirus informations.')
+    parser_sessinfo.set_defaults(func=antivirus)
+
 
     return parser.parse_args(args)
 
