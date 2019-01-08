@@ -69,7 +69,7 @@ class AntivirusSummary(np.Summary):
     def ok(self, results):
         l = []
         for result in results.results:
-            s = '%s: %s%%' % (result.metric.name, result.metric.value)
+            s = '%s: %s' % (result.metric.name, result.metric.value)
             _log.debug('Add result %r', s)
             l.append(s)
         _log.debug('Result count: %d' % len(l))
