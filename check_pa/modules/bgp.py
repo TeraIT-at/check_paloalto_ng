@@ -17,14 +17,14 @@ def create_check(args):
     """
     return np.Check(
         Bgp(args.host, args.token, args.mode),
-        np.ScalarContext('bgp', args.warn, args.crit),
+        np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
         BgpSummary())
 
 
 class Bgp(np.Resource):
     """
-    Will fetch the antivirus definition date from the REST API and returns
-    a warning if the definition date is between the value of warning (e. g. 1)
+    Will fetch the bgp informations (routes and peers) from the REST API and returns
+    a warning if the result is lesser the value of warning (e. g. 1)
     and critical (e. g. 2).
     """
 
@@ -37,21 +37,21 @@ class Bgp(np.Resource):
 
     def probe(self):
         """
-        Querys the REST-API and create antivirus metrics.
+        Querys the REST-API and create bgp metrics.
 
-        :return: antivirus metric.
+        :return: bgp metric.
         """
         _log.info('Reading XML from: %s', self.xml_obj.build_request_url())
         soup = self.xml_obj.read()
         result = soup.result
         if self.mode == "routes":
             for item in result.find_all('BGP-Routes'):
-                bgp_routes = Finder.find_item(item, 'total')
+                bgp_routes = int(Finder.find_item(item, 'total'))
             _log.info('BGP Routes: %s' % bgp_routes)
             return [np.Metric('bgp-routes-count', bgp_routes, context='bgp')]
         elif self.mode == "peers":
             for item in result.find_all('bgp'):
-                peer_count = Finder.find_item(item, 'peer-count')
+                peer_count = int(Finder.find_item(item, 'peer-count'))
             _log.info('BGP Peers: %s' % peer_count)
             return [np.Metric('peer-count', peer_count, context='bgp')]
 
