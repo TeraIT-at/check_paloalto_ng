@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat, bgp
 
 
 @nagiosplugin.guarded
@@ -189,6 +189,12 @@ def parse_args(args):
         metavar='CRIT', type=int, default=10,
         help='Critical if threat definition date is older. In days (default: %(default)s)')
     parser_threat.set_defaults(func=threat)
+
+    # Sub-Parser for command 'threat'.
+    parser_bgp = subparsers.add_parser(
+        'bgp',
+        help='check bgp informations.')
+    parser_bgp.set_defaults(func=bgp)
 
     return parser.parse_args(args)
 
