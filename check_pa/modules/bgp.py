@@ -18,7 +18,7 @@ def create_check(args):
     return np.Check(
         Bgp(args.host, args.token),
         np.ScalarContext('bgp-routes-count'),
-        Bgp())
+        BgpSummary())
 
 
 class Bgp(np.Resource):
