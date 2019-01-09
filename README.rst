@@ -43,7 +43,7 @@ Command-line usage::
 
     usage: check_paloalto [-h] -H HOST -T TOKEN [-v] [-t TIMEOUT] [--reset]
                       [--version]
-                      {diskspace,certificates,load,useragent,environmental,sessinfo,thermal,throughput}
+                      {diskspace,certificates,load,useragent,environmental,sessinfo,thermal,throughput,antivirus,threat}
                       ...
 
     positional arguments:
@@ -57,6 +57,8 @@ Command-line usage::
         sessinfo            check important session parameters.
         thermal             check the temperature.
         throughput          check the throughput.
+        antivirus           check antivirus informations.
+        threat              check threat informations.
 
     optional arguments:
       -h, --help            show this help message and exit
