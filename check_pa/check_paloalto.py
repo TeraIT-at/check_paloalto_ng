@@ -194,6 +194,21 @@ def parse_args(args):
     parser_bgp = subparsers.add_parser(
         'bgp',
         help='check bgp informations.')
+    parser_bgp.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=5,
+        help='Warning if bgp routes/peer is lesser (default: %(default)s)')
+    parser_bgp.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=10,
+        help='Critical if bgp routes/peer is lesser (default: %(default)s)')
+    parser_bgp.add_argument(
+        '-m', '--mode',
+        nargs='?',
+        default="routes",
+        help='Mode: routes or peers ((default: %(default)s)',
+        required=True)
+
     parser_bgp.set_defaults(func=bgp)
 
     return parser.parse_args(args)
