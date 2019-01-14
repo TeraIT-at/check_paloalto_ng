@@ -15,10 +15,16 @@ def create_check(args):
 
     :return: the bgp check.
     """
-    return np.Check(
-        Bgp(args.host, args.token, args.mode, args.peer=None),
-        np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
-        BgpSummary())
+    if not args.peer:
+        return np.Check(
+            Bgp(args.host, args.token, args.mode, None),
+            np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
+            BgpSummary())
+    else:
+        return np.Check(
+            Bgp(args.host, args.token, args.mode, args.peer),
+            np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
+            BgpSummary())
 
 
 class Bgp(np.Resource):
@@ -32,8 +38,8 @@ class Bgp(np.Resource):
         self.host = host
         self.token = token
         self.mode = mode
-        if peer:
-            self.peer = peer
+        self.peer = peer
+        if peer is not None:
             self.cmd = '<show><routing><protocol><bgp><peer><peer-name>%s</peer-name></peer></bgp></protocol></routing></show>' % self.peer
         else:
             self.cmd = '<show><routing><summary></summary></routing></show>'
@@ -55,8 +61,8 @@ class Bgp(np.Resource):
             return [np.Metric('bgp-routes-count', bgp_routes, context='bgp')]
         elif self.mode == "peers":
             if self.peer:
-                peer_status = Finder.find_item(item, 'status')
-                return [np.Metric('peer-status', peer_count, context='bgp')]
+                peer_status = Finder.find_item(result, 'status')
+                return [np.Metric('peer-status', peer_status, context='bgp')]
             else:
                 for item in result.find_all('bgp'):
                     peer_count = int(Finder.find_item(item, 'peer-count'))
