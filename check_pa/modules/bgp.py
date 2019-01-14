@@ -23,7 +23,7 @@ def create_check(args):
     else:
         return np.Check(
             Bgp(args.host, args.token, args.mode, args.peer),
-            np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
+            np.BgpPeerContext('bgp'),
             BgpSummary())
 
 
@@ -69,6 +69,18 @@ class Bgp(np.Resource):
                 _log.info('BGP Peers: %s' % peer_count)
                 return [np.Metric('peer-count', peer_count, context='bgp')]
 
+
+class BgpPeerContext(np.Context):
+    def __init__(self, name, fmt_metric='{name} is {valueunit}',
+                 result_cls=np.Result):
+        super(BgpPeerContext, self).__init__(name, fmt_metric,
+                                               result_cls)
+
+    def evaluate(self, metric, resource):
+        if metric.value == 'Established':
+            return self.result_cls(np.Ok, None, metric)
+        else:
+            return self.result_cls(np.Critical, None, metric)
 
 class BgpSummary(np.Summary):
     def ok(self, results):

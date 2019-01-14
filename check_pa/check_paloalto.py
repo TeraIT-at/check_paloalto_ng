@@ -197,11 +197,11 @@ def parse_args(args):
     parser_bgp.add_argument(
         '-w', '--warn',
         metavar='WARN', type=int, default=5,
-        help='Warning if bgp routes/peer is lesser (default: %(default)s)')
+        help='Warning if bgp routes/peer count is lesser (default: %(default)s)')
     parser_bgp.add_argument(
         '-c', '--crit',
         metavar='CRIT', type=int, default=10,
-        help='Critical if bgp routes/peer is lesser (default: %(default)s)')
+        help='Critical if bgp routes/peer count is lesser (default: %(default)s)')
     parser_bgp.add_argument(
         '-m', '--mode',
         metavar="MODE", type=str,
@@ -210,7 +210,7 @@ def parse_args(args):
     parser_bgp.add_argument(
         '-p', '--peer',
         metavar="PEER", type=str,
-        help='Peer status (name)',
+        help='Peer status (name, critical if not Established)',
         required=False)
     parser_bgp.set_defaults(func=bgp)
 
