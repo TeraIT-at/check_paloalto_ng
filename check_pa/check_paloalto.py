@@ -207,7 +207,11 @@ def parse_args(args):
         metavar="MODE", type=str,
         help='Mode: routes or peers',
         required=True)
-
+    parser_bgp.add_argument(
+        '-p', '--peer',
+        metavar="PEER", type=str,
+        help='Peer status (name)',
+        required=False)
     parser_bgp.set_defaults(func=bgp)
 
     return parser.parse_args(args)
