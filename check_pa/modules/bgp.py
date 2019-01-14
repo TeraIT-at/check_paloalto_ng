@@ -15,7 +15,7 @@ def create_check(args):
 
     :return: the bgp check.
     """
-    if not args.peer:
+    if not hasattr(args, 'peer'):
         return np.Check(
             Bgp(args.host, args.token, args.mode, None),
             np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
