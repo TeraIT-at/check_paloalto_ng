@@ -23,7 +23,7 @@ def create_check(args):
     else:
         return np.Check(
             Bgp(args.host, args.token, args.mode, args.peer),
-            np.BgpPeerContext('bgp'),
+            BgpPeerContext('bgp'),
             BgpSummary())
 
 
