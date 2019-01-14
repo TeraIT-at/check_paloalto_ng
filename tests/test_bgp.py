@@ -30,7 +30,7 @@ class TestBgp(object):
         self.mode = 'routes'
 
         f = 'bgp_routes.xml'
-        check = check_pa.modules.load.create_check(self)
+        check = check_pa.modules.bgp.create_check(self)
         obj = check.resources[0]
 
         with responses.RequestsMock() as rsps:
