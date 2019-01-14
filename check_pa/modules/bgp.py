@@ -54,6 +54,7 @@ class Bgp(np.Resource):
         _log.info('Reading XML from: %s', self.xml_obj.build_request_url())
         soup = self.xml_obj.read()
         result = soup.result
+        _log.debug('XML Result: \n%s', str(result))
         if self.mode == "routes":
             for item in result.find_all('BGP-Routes'):
                 bgp_routes = int(Finder.find_item(item, 'total'))
@@ -62,7 +63,9 @@ class Bgp(np.Resource):
         elif self.mode == "peers":
             if self.peer:
                 peer_status = Finder.find_item(result, 'status')
-                return [np.Metric('peer-status', peer_status, context='bgp')]
+                peer_status_duration = Finder.find_item(result, 'status-duration')
+                return [np.Metric('peer-status', peer_status, context='bgp'),
+                        np.Metric('peer-status-duration', "%ss" % peer_status_duration, context='bgp')]
             else:
                 for item in result.find_all('bgp'):
                     peer_count = int(Finder.find_item(item, 'peer-count'))
@@ -75,8 +78,9 @@ class BgpPeerContext(np.Context):
                  result_cls=np.Result):
         super(BgpPeerContext, self).__init__(name, fmt_metric,
                                                result_cls)
-
     def evaluate(self, metric, resource):
+        if metric.name == 'peer-status-duration':
+            return self.result_cls(np.Ok, None, metric)
         if metric.value == 'Established':
             return self.result_cls(np.Ok, None, metric)
         else:

@@ -129,6 +129,7 @@ crashlytics-build.properties
 fabric.properties
 
 *.log
+*.patch
 
 # Virtualenv
 include/
