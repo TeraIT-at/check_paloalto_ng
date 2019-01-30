@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat, bgp
 
 
 @nagiosplugin.guarded
@@ -189,6 +189,30 @@ def parse_args(args):
         metavar='CRIT', type=int, default=10,
         help='Critical if threat definition date is older. In days (default: %(default)s)')
     parser_threat.set_defaults(func=threat)
+
+    # Sub-Parser for command 'threat'.
+    parser_bgp = subparsers.add_parser(
+        'bgp',
+        help='check bgp informations.')
+    parser_bgp.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=5,
+        help='Warning if bgp routes/peer count is lesser (default: %(default)s)')
+    parser_bgp.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=10,
+        help='Critical if bgp routes/peer count is lesser (default: %(default)s)')
+    parser_bgp.add_argument(
+        '-m', '--mode',
+        metavar="MODE", type=str,
+        help='Mode: routes or peers',
+        required=True)
+    parser_bgp.add_argument(
+        '-p', '--peer',
+        metavar="PEER", type=str,
+        help='Peer status (name, critical if not Established)',
+        required=False)
+    parser_bgp.set_defaults(func=bgp)
 
     return parser.parse_args(args)
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response status="success"><result>
+    <entry>
+        <All-Routes>
+            <total>200</total>
+            <limit>200000</limit>
+            <active>150</active></All-Routes>
+        <All-IPv4>
+            <total>150</total>
+            <limit>100000</limit></All-IPv4>
+        <All-IPv6>
+            <total>0</total>
+            <limit>100000</limit></All-IPv6>
+        <Static-Routes>
+            <total>4</total></Static-Routes>
+        <Connect-Routes>
+            <total>27<total></Connect-Routes>
+        <BGP-Routes>
+            <total>12</total></BGP-Routes>
+        <OSPF-Routes>
+            <total>88</total></OSPF-Routes>
+        <RIP-Routes>
+            <total>0</total></RIP-Routes></entry>
+    <entry name="default">
+    <bgp>
+        <peer-group-count>12</peer-group-count>
+        <peer-count>12</peer-count>
+        <local-rib-prefix-count>96</local-rib-prefix-count>
+        <mp-bgp-enable>yes</mp-bgp-enable>
+    <afi-safi-ipv4-unicast>yes</afi-safi-ipv4-unicast></bgp>
+        <ospf>
+            <area-count>1</area-count>
+            <subnet-count>8</subnet-count>
+            <neighbor-count>9</neighbor-count>
+        </ospf>
+    </entry>
+</result></response>
