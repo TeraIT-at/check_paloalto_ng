@@ -1,3 +1,5 @@
+
+
 # -*- coding: utf-8 -*-
 import argparse
 import sys
@@ -97,6 +99,8 @@ def parse_args(args):
     parser_useragent = subparsers.add_parser(
         'useragent',
         help='check for running useragents.')
+    parser_useragent.add_argument('-A', '--agent',
+                            help='Agent name. Exmaple: all',)
     parser_useragent.add_argument(
         '-w', '--warn',
         metavar='WARN', type=int, default=60,
