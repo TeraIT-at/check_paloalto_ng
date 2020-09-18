@@ -17,17 +17,17 @@ def create_check(args):
     :return: the useragent check.
     """
     return np.Check(
-        UserAgent(args.host, args.token),
+        UserAgent(args.host, args.token, args.agent),
         np.ScalarContext('agent_last_heared', args.warn, args.crit),
         UserAgentContext('agent_connected'),
         UserAgentSummary())
 
 
 class UserAgent(np.Resource):
-    def __init__(self, host, token):
+    def __init__(self, host, token, agent):
         self.host = host
         self.token = token
-        self.cmd = '<show><user><user-id-agent><state>all</state>' \
+        self.cmd = '<show><user><user-id-agent><state>'+agent+'</state>' \
                    '</user-id-agent></user></show>'
         self.xml_obj = XMLReader(self.host, self.token, self.cmd)
 
@@ -44,9 +44,6 @@ class UserAgent(np.Resource):
 
         for useragent in useragents:
             agent_details = useragent.split('\n')
-            if (agent_details[0].startswith('Agent')):
-                raise CheckError('Unexpected query result!')
-
             name = agent_details[0]
             status = agent_details[1].split(':')[1].strip()
             last_heared = int(agent_details[20].split(':')[1].strip())
