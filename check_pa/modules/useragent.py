@@ -44,7 +44,7 @@ class UserAgent(np.Resource):
 
         for useragent in useragents:
             agent_details = useragent.split('\n')
-            if (len(agent_details) != 31) or not (agent_details[0].startswith('Agent')):
+            if (agent_details[0].startswith('Agent')):
                 raise CheckError('Unexpected query result!')
 
             name = agent_details[0]
