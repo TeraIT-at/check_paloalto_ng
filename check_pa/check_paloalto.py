@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat, bgp
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat, bgp, qos
 
 
 @nagiosplugin.guarded
@@ -213,6 +213,26 @@ def parse_args(args):
         help='Peer status (name, critical if not Established)',
         required=False)
     parser_bgp.set_defaults(func=bgp)
+
+    # Sub-Parser for command 'qos'
+    parser_qos = subparsers.add_parser(
+        'qos',
+        help='check quality of service.')
+    parser_qos.add_argument(
+        '-k', '--klass',
+        metavar='KLASS', default='all',
+        help='Define qos class',
+        nargs='?',
+       )
+    parser_qos.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=8000000,
+        help='Warning if qos is higher. In kbps (default: %(default))')
+    parser_qos.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=9000000,
+        help='Critical if qos is higher. In kbps (default: %(default))')
+    parser_qos.set_defaults(func=qos)
 
     return parser.parse_args(args)
 
