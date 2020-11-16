@@ -5,7 +5,9 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, antivirus, threat, bgp, qos
+from check_pa.modules import certificate, throughput, diskspace, useragent, \
+                                environmental, sessioninfo, thermal, load, \
+                                antivirus, threat, bgp, qos, reports
 
 
 @nagiosplugin.guarded
@@ -233,6 +235,17 @@ def parse_args(args):
         metavar='CRIT', type=int, default=9000000,
         help='Critical if qos is higher. In kbps (default: %(default))')
     parser_qos.set_defaults(func=qos)
+
+    # Sub-Parser for command 'reports'.
+    parser_reports = subparsers.add_parser(
+        'reports',
+        help='get reports values')
+    parser_reports.add_argument(
+        '-r', '--report',
+        metavar="REPORT", type=str,
+        help='Report name', default=""
+        required=True)
+    parser_reports.set_defaults(func=reports)
 
     return parser.parse_args(args)
 
