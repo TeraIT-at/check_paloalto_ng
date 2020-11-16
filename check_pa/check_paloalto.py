@@ -40,7 +40,7 @@ def parse_args(args):
 
     info = parser.add_argument_group('Info')
     info.add_argument('--version', action='version',
-                      version='%(prog)s 0.3.3')
+                      version='%(prog)s 0.3.4')
 
     subparsers = parser.add_subparsers(dest='command')
     subparsers.required = True
@@ -243,7 +243,17 @@ def parse_args(args):
     parser_reports.add_argument(
         '-r', '--report',
         metavar="REPORT", type=str,
-        help='Report name', default=""
+        help='Report name (ex: top-applications)',
+        required=True)
+    parser_reports.add_argument(
+        '-n', '--name',
+        metavar="NAME", type=str,
+        help='Value name (ex: name)',
+        required=True)
+    parser_reports.add_argument(
+        '-t', '--type',
+        metavar="TYPE", type=str,
+        help='Value type (ex: nbsess)',
         required=True)
     parser_reports.set_defaults(func=reports)
 
