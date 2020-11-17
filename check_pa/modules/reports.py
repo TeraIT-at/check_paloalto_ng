@@ -44,11 +44,18 @@ class Reports(np.Resource):
         soup = self.xml_obj.report()
         result = soup.result
         #_log.debug('XML Result: \n%s', str(result))
-        attrs = []
+        attrs = {}
         for item in result.find_all('entry'):
             rname = str(Finder.find_item(item, self.rname))
+            if rname == "":
+                rname = "None"
             rvalue = int(Finder.find_item(item, self.rtype))
-            yield np.Metric('%s' % rname, rvalue, context='reports')
+            if rname in attrs:
+                attrs[rname] += rvalue
+            else:
+                attrs[rname] = rvalue
+        for k,v in attrs.items():
+            yield np.Metric('%s' % k, v, context='reports')
 
 class ReportsSummary(np.Summary):
     def ok(self, results):
