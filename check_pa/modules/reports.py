@@ -17,7 +17,7 @@ def create_check(args):
     """
     return np.Check(
         Reports(args.host, args.token, args.report, args.name, args.type),
-        ReportsContext('reports'),
+        np.ScalarContext('reports'),
         ReportsSummary())
 
 
@@ -48,15 +48,7 @@ class Reports(np.Resource):
         for item in result.find_all('entry'):
             rname = str(Finder.find_item(item, self.rname))
             rvalue = int(Finder.find_item(item, self.rtype))
-            yield np.Metric('%s' % rname, rvalue, self.rtype, context='reports')
-
-class ReportsContext(np.Context):
-    def __init__(self, name, fmt_metric='{name} is {valueunit}',
-                 result_cls=np.Result):
-        super(ReportsContext, self).__init__(name, fmt_metric,
-                                               result_cls)
-    def evaluate(self, metric, resource):
-            return self.result_cls(np.Ok, None, metric)
+            yield np.Metric('%s' % rname, rvalue, context='reports')
 
 class ReportsSummary(np.Summary):
     def ok(self, results):
@@ -66,5 +58,5 @@ class ReportsSummary(np.Summary):
             _log.debug('Add result %r', s)
             l.append(s)
         _log.debug('Result count: %d' % len(l))
-        output = ", ".join(l)
+        output = "\n".join(l)
         return str(output)
