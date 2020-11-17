@@ -63,7 +63,7 @@ class XMLReader:
         :return: URL.
         """
         if report:
-            request_url = 'https://%s/api/?key=%s&type=report&async=no&reporttype=predefined&reportname=%s' % (
+            request_url = 'https://%s/api/?key=%s&type=report&async=no&reporttype=dynamic&period=last-15-minutes&reportname=%s' % (
                 self.host, self.token, self.cmd)
         else:
             request_url = 'https://%s/api/?key=%s&type=op&cmd=%s' % (
