@@ -147,7 +147,7 @@ def parse_args(args):
         help='check the interface.')
 
     parser_throughput.add_argument(
-        '-i', '--throughput',
+        '-i', '--interface',
         help='PA interface name, seperate by comma.',
         nargs='?',
         required=True,
