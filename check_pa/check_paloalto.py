@@ -160,8 +160,15 @@ def parse_args(args):
         help='check the cluster status.')
     
     parser_cluster.add_argument(
-        '-s', '--clusterstate',
-        help='Expected Cluster State, either active or passive',
+        '-p', '--primarystate',
+        help='Expected Primary Node Cluster State, either active or passive',
+        nargs='?',
+        required=True,
+    )
+
+    parser_cluster.add_argument(
+        '-s', '--secondarystate',
+        help='Expected Secondary Node Cluster State, either active or passive',
         nargs='?',
         required=True,
     )
