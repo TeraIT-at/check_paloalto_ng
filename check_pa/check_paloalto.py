@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load
+from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load
 
 
 @nagiosplugin.guarded
@@ -153,6 +153,20 @@ def parse_args(args):
         required=True,
     )
     parser_throughput.set_defaults(func=throughput)
+
+    # Sub-Parser for command 'cluster'.
+    parser_cluster = subparsers.add_parser(
+        'cluster',
+        help='check the cluster status.')
+    
+    parser_cluster.add_argument(
+        '-s', '--clusterstate',
+        help='Expected Cluster State, either active or passive',
+        nargs='?',
+        required=True,
+    )
+
+    parser_cluster.set_defaults(func=cluster)
 
     return parser.parse_args(args)
 
