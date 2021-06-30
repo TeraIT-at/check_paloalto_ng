@@ -43,7 +43,6 @@ class Cluster(np.Resource):
         soup = self.xml_obj.read()
 
         ha_enabled = soup.result.enabled.text
-
         if not ha_enabled:
             _log.debug('High Availability is not enabled')
             yield np.Metric('High Availability is not enabled', True, context='alarm')
@@ -51,11 +50,18 @@ class Cluster(np.Resource):
 
 
         localinfo = soup.find('local-info')
+
         state = Finder.find_item(localinfo, 'state')
         if state != self.clusterstate:
             _log.debug(f'High Availability Cluster Status is {state} not {self.clusterstate}')
             yield np.Metric(f'High Availability Cluster Status is {state} not {self.clusterstate}', True, context='alarm')
         yield np.Metric(f'High Availability Cluster Status is {state}', False, context='alarm')
+
+        sync_state = Finder.find_item(localinfo, 'state-sync')
+        if sync_state != 'Complete':
+            _log.debug(f'Cluster Configuration Synchronization state is {sync_state} not Complete')
+            yield np.Metric(f'Cluster Configuration Synchronization state is {sync_state} not Complete', True, context='alarm')
+        yield np.Metric(f'Cluster Configuration Synchronization state is {sync_state}', False, context='alarm')
 
 class ClusterContext(np.Context):
     def __init__(self, name, fmt_metric='{name} is {valueunit}',
