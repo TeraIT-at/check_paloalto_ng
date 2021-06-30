@@ -59,35 +59,39 @@ class Cluster(np.Resource):
         if state != self.localstate:
             _log.debug(f'Cluster Local node status is {state} not {self.localstate}')
             yield np.Metric(f'Cluster Local node status is {state} not {self.localstate}', True, context='alarm')
-        yield np.Metric(f'Cluster Local node status is {state}', False, context='alarm')
+        else:
+            yield np.Metric(f'Cluster Local node status is {state}', False, context='alarm')
         
         # Check if the peer node is $secondarystate by checking <result><group><peer-info><state>$secondarystate</state></peer-info></group></result>
         peerstate = Finder.find_item(peerinfo, 'state')
         if peerstate != self.peerstate:
             _log.debug(f'Cluster Peer node status is {peerstate} not {self.peerstate}')
             yield np.Metric(f'Cluster Peer node status is {peerstate} not {self.peerstate}', True, context='alarm')
-        yield np.Metric(f'Cluster Peer node status is {peerstate}', False, context='alarm')
+        else:
+            yield np.Metric(f'Cluster Peer node status is {peerstate}', False, context='alarm')
 
         # Check if the peer node is up by checking <result><group><peer-info><conn-status>up</conn-status></peer-info></group></result>
         peerup = Finder.find_item(peerinfo, 'conn-status')
         if peerup != 'up':
             _log.debug('Cluster Peer node status is not Connected')
             yield np.Metric('Cluster Peer node status is not Connected', True, context='alarm')
-        yield np.Metric('Cluster Peer node status is not Connected', False, context='alarm')
+        yield np.Metric('Cluster Peer node status is Connected', False, context='alarm')
 
         # Check if configuration synchronization is enabled by checking <result><group><running-sync-enabled>yes</running-sync-enabled></group></result>
         sync_enabled = soup.group.select('running-sync-enabled')[0].text
         if sync_enabled != 'yes':
             _log.debug('Cluster Configuration Synchronization is not Enabled')
             yield np.Metric('Cluster Configuration Synchronization state is not Enabled', True, context='alarm')
-        yield np.Metric('Cluster Configuration Synchronization state is Enabled', False, context='alarm')
+        else:
+            yield np.Metric('Cluster Configuration Synchronization state is Enabled', False, context='alarm')
 
         # Check if configuration synchronization is synchronized by checking <result><group><running-sync>synchronized</running-sync></group></result>
         sync_state = soup.group.select('running-sync')[0].text
         if sync_state != 'synchronized':
             _log.debug(f'Cluster Configuration Synchronization state is {sync_state} not synchronized')
             yield np.Metric(f'Cluster Configuration Synchronization state is {sync_state} not synchronized', True, context='alarm')
-        yield np.Metric(f'Cluster Configuration Synchronization state is {sync_state}', False, context='alarm')
+        else:
+            yield np.Metric(f'Cluster Configuration Synchronization state is {sync_state}', False, context='alarm')
 
 class ClusterContext(np.Context):
     def __init__(self, name, fmt_metric='{name} is {valueunit}',

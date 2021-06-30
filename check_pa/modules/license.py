@@ -57,6 +57,9 @@ class License(np.Resource):
                 delta = datetime.strptime(expires, '%B %d, %Y') - present
                 if delta.days < 60:
                     yield np.Metric(f'License with name: {name} will expire in {delta.days} days!', True, context='alarm')
+                else:
+                    yield np.Metric(f'License with name: {name} will expire in {delta.days} days.', False, context='alarm')
+
             
        
 class LicenseContext(np.Context):
