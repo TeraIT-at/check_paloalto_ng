@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, license
+from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, license, interface
 
 
 @nagiosplugin.guarded
@@ -144,15 +144,34 @@ def parse_args(args):
     # Sub-Parser for command 'throughput'.
     parser_throughput = subparsers.add_parser(
         'throughput',
-        help='check the throughput.')
+        help='check the interface.')
 
     parser_throughput.add_argument(
-        '-i', '--interface',
+        '-i', '--throughput',
         help='PA interface name, seperate by comma.',
         nargs='?',
         required=True,
     )
     parser_throughput.set_defaults(func=throughput)
+
+    # Sub-Parser for command 'interface'.
+    parser_interface = subparsers.add_parser(
+        'interface',
+        help='check the interfaces. If none specified will check all.')
+
+    parser_interface.add_argument(
+        '-i', '--interface',
+        help='PA interface name. Give names, seperated by comma.',
+        nargs='?',
+    )
+
+    parser_interface.add_argument(
+        '-x', '--exclude',
+        help='Exclude interfaces. Give names, seperated by comma.',
+        nargs='?',
+    )
+
+    parser_interface.set_defaults(func=interface)
 
     # Sub-Parser for command 'cluster'.
     parser_cluster = subparsers.add_parser(
