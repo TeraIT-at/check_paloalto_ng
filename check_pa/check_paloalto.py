@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load
+from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, license
 
 
 @nagiosplugin.guarded
@@ -174,6 +174,13 @@ def parse_args(args):
     )
 
     parser_cluster.set_defaults(func=cluster)
+
+    # Sub-Parser for command 'license'.
+    parser_license = subparsers.add_parser(
+        'license',
+        help='check the license status.')
+
+    parser_license.set_defaults(func=license)
 
     return parser.parse_args(args)
 
