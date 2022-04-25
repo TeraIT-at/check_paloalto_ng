@@ -40,6 +40,7 @@ class Environmental(np.Resource):
         _log.info('Reading XML from: %s', self.xml_obj.build_request_url())
         soup = self.xml_obj.read()
         entrys = soup.find_all('entry')
+
         for entry in entrys:
             if entry.alarm.text == 'True':
                 _log.debug('Alarm found: %s' % entry.description)

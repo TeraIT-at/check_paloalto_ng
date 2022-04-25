@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply
 
 
 @nagiosplugin.guarded
@@ -112,6 +112,16 @@ def parse_args(args):
         'environmental',
         help='check if an alarm is found.')
     parser_environmental.set_defaults(func=environmental)
+
+    # Sub-Parser for command 'powersupply'.
+    parser_powersupply = subparsers.add_parser(
+        'powersupply',
+        help='check present power supplies.')
+    parser_powersupply.add_argument(
+    '-m', '--min',
+    metavar='MIN', type=int, default=1,
+    help='Warning if functional PSU is lower than specified. (default: %(default)s)')
+    parser_powersupply.set_defaults(func=powersupply)
 
     # Sub-Parser for command 'sessinfo'.
     parser_sessinfo = subparsers.add_parser(
