@@ -28,6 +28,22 @@ check_pa.modules.environmental module
     :undoc-members:
     :show-inheritance:
 
+check_pa.modules.powersupply module
+-------------------------------------
+
+.. automodule:: check_pa.modules.powersupply
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+check_pa.modules.pppoe module
+-------------------------------------
+
+.. automodule:: check_pa.modules.pppoe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 check_pa.modules.load module
 ----------------------------
 

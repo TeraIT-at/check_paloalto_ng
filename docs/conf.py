@@ -55,8 +55,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'nagios_check_paloalto'
-copyright = u'2015, Ralph Offinger'
+project = u'check_paloalto_ng'
+copyright = u'2022, Christian Jonak-Möchel'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -209,8 +209,8 @@ latex_elements = {
 # [howto/manual]).
 latex_documents = [
     ('index', 'check_paloalto.tex',
-     u'nagios_check_paloalto Documentation',
-     u'Ralph Offinger', 'manual'),
+     u'check_paloalto_ng Documentation',
+     u'Christian Jonak-Möchel', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at
@@ -240,8 +240,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'check_paloalto',
-     u'nagios_check_paloalto Documentation',
-     [u'Ralph Offinger'], 1)
+     u'check_paloalto_ng Documentation',
+     [u'Christian Jonak-Möchel'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -255,8 +255,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'check_paloalto',
-     u'nagios_check_paloalto Documentation',
-     u'Ralph Offinger',
+     u'check_paloalto_ng Documentation',
+     u'Christian Jonak-Möchel',
      'check_paloalto',
      'Checks PaloAlto Firewall Systems',
      'Miscellaneous'),

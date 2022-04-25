@@ -1,4 +1,4 @@
-Welcome to nagios_check_paloalto's documentation!
+Welcome to check_paloalto_ng's documentation!
 ======================================
 
 Contents:

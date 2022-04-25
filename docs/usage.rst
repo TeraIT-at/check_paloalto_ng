@@ -10,13 +10,14 @@ Command-line usage::
                       ...
 
     positional arguments:
-      {diskspace,certificates,load,useragent,environmental,sessinfo,thermal,throughput}
+      {diskspace,certificates,load,useragent,environmental,powersupply,pppoe,sessinfo,thermal,throughput}
         diskspace           check used diskspace.
-        certificates        check the certificate store for expiring certificates:
-                            Outputs is a warning, if a certificate is in range.
+        certificates        check the certificate store for expiring certificates: Outputs is a warning, if a certificate is in range.
         load                check the CPU load.
         useragent           check for running useragents.
         environmental       check if an alarm is found.
+        powersupply         check present power supplies.
+        pppoe               check the pppoe interface.
         sessinfo            check important session parameters.
         thermal             check the temperature.
         throughput          check the throughput.
@@ -107,6 +108,39 @@ example::
 
     $ check_paloalto -H HOST -T TOKEN environmental
     $ ENVIRONMENTAL OK - No alarms found.
+
+powersupply
+-------------
+usage::
+
+    usage: check_paloalto powersupply [-h] [-m MIN]
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      -m MIN, --min MIN  Warning if functional PSU is lower than specified. (default: 1)
+
+example::
+
+    $ check_paloalto -H HOST -T TOKEN powersupply
+    $ POWERSUPPLY OK - 2 working power supplies. | 'Functional Power Supplies'=2;;@0 'Slot 1-Power Supply #1-Alarm'=0 'Slot 1-Power Supply #1-Inserted'=1 'Slot 1-Power Supply #2-Alarm'=0 'Slot 1-Power Supply #2-Inserted'=1
+
+pppoe
+-------------
+usage::
+
+    usage: check_paloalto pppoe [-h] -i [INTERFACE] [--expect-down] [-m MTU]
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -i [INTERFACE], --interface [INTERFACE]
+                            PA interface name
+      --expect-down         Expect PPPOE session to be down. (default: False)
+      -m MTU, --mtu MTU     Minimum expected MTU (default: 1492)
+
+example::
+
+    $ check_paloalto -H HOST -T TOKEN pppoe -i ethernet1/1 
+    PPPOEINTERFACE OK - ethernet1/1: PPPoE is UP, PPP is UP, MTU is 1492 | 'ethernet1/1-pppoe-mtu'=1492;;1492 'ethernet1/1-pppoe-ppp-state'=1;;True 'ethernet1/1-pppoe-pppoe-state'=1;;True
 
 
 sessinfo

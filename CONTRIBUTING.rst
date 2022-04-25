@@ -13,7 +13,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/ralph-hm/nagios_check_paloalto/issues.
+Report bugs at https://github.com/TeraIT-at/check_paloalto_ng/issues.
 
 If you are reporting a bug, please include:
 
@@ -36,14 +36,14 @@ is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-nagios_check_paloalto could always use more documentation, whether as part of the
-official nagios_check_paloalto docs, in docstrings, or even on the web in blog posts,
+check_paloalto_ng could always use more documentation, whether as part of the
+official check_paloalto_ng docs, in docstrings, or even on the web in blog posts,
 articles, and such.
 
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/ralph-hm/nagios_check_paloalto/issues.
+The best way to send feedback is to file an issue at https://github.com/TeraIT-at/check_paloalto_ng/issues.
 
 If you are proposing a feature:
 
@@ -55,17 +55,17 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `nagios_check_paloalto` for local development.
+Ready to contribute? Here's how to set up `check_paloalto_ng` for local development.
 
-1. Fork the `nagios_check_paloalto` repo on GitHub.
+1. Fork the `check_paloalto_ng` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/nagios_check_paloalto.git
+    $ git clone git@github.com:your_name_here/check_paloalto_ng.git
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv nagios_check_paloalto
-    $ cd nagios_check_paloalto/
+    $ mkvirtualenv check_paloalto_ng
+    $ cd check_paloalto_ng
     $ python setup.py develop
 
 4. Create a branch for local development::
@@ -104,6 +104,3 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 2.6, 2.7, 3.3, and 3.4, and for PyPy. Check
-   https://travis-ci.org/ralph-hm/nagios_check_paloalto/pull_requests
-   and make sure that the tests pass for all supported Python versions.

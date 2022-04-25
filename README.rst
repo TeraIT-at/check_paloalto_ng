@@ -1,59 +1,53 @@
 =============================================
-nagios_check_paloalto: a Nagios/Icinga Plugin
+check_paloalto_ng: a Nagios/Icinga Plugin
 =============================================
-nagios_check_paloalto is a **Nagios/Icinga plugin** for Palo Alto Next Generation Firewalls.
+check_paloalto_ng is a **Nagios/Icinga plugin** for Palo Alto Next Generation Firewalls, that was initially developed by ralpha089 (https://github.com/ralph089/nagios_check_paloalto)
 It is written in Python and based on the PA REST API.
+
 
 Tested on:
 
 - PA-500 v6.0.1 - v6.0.9
 - PA-3050 v6.0.9 - 7.1.9
 
-.. image:: https://travis-ci.org/ralph-hm/nagios_check_paloalto.svg?branch=master
-    :target: https://travis-ci.org/ralph-hm/nagios_check_paloalto?branch=master
-
-.. image:: https://coveralls.io/repos/github/ralph-hm/nagios_check_paloalto/badge.svg?branch=master
-    :target: https://coveralls.io/github/ralph-hm/nagios_check_paloalto?branch=master
-
-.. image:: https://badge.fury.io/py/check_paloalto.svg
-    :target: https://badge.fury.io/py/check_paloalto
 
 Documentation
 -------------
-http://nagios-check-paloalto.readthedocs.org/en/latest/
+https://check-paloalto-ng.readthedocs.io/en/latest/
 
 Quickstart
 ----------
 Please make sure you have python-dev and libxslt1-dev installed on your machine.
 
-To install nagios_check_paloalto::
+To install check_paloalto_ng::
 
-	$ pip install check_paloalto --upgrade
+	$ pip install check_paloalto_ng --upgrade
 
 or use::
 
-	$ pip3 install check_paloalto --upgrade
+	$ pip3 install check_paloalto_ng --upgrade
 
 The plugin requires a token to get information from the PA-REST-API. Please see the following link for more information:
-http://nagios-check-paloalto.readthedocs.org/en/latest/configuration.html#token
+https://check-paloalto-ng.readthedocs.io/en/latest//configuration.html#token
 
 Usage
 -----
 Command-line usage::
 
-    usage: check_paloalto [-h] -H HOST -T TOKEN [-v] [-t TIMEOUT] [--reset]
+    usage: check_paloalto_ng [-h] -H HOST -T TOKEN [-v] [-t TIMEOUT] [--reset]
                       [--version]
                       {diskspace,certificates,load,useragent,environmental,sessinfo,thermal,throughput}
                       ...
 
     positional arguments:
-      {diskspace,certificates,load,useragent,environmental,sessinfo,thermal,throughput}
+      {diskspace,certificates,load,useragent,environmental,powersupply,pppoe,sessinfo,thermal,throughput}
         diskspace           check used diskspace.
-        certificates        check the certificate store for expiring certificates:
-                            Outputs is a warning, if a certificate is in range.
+        certificates        check the certificate store for expiring certificates: Outputs is a warning, if a certificate is in range.
         load                check the CPU load.
         useragent           check for running useragents.
         environmental       check if an alarm is found.
+        powersupply         check present power supplies.
+        pppoe               check the pppoe interface.
         sessinfo            check important session parameters.
         thermal             check the temperature.
         throughput          check the throughput.

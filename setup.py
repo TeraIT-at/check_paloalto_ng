@@ -22,14 +22,14 @@ test_requirements = [
     'flake8'
 ]
 
-setup(name='check_paloalto',
+setup(name='check_paloalto_ng',
       version='0.3.2',
-      description="check_paloalto is a Nagios/Icinga plugin for Palo Alto Next Generation Firewalls. It is written in "
+      description="check_paloalto_ng is a Nagios/Icinga plugin for Palo Alto Next Generation Firewalls. It is written in "
                   "Python and based on the PA REST API.",
       long_description=readme + '\n\n' + history,
-      author="Ralph Offinger",
-      author_email='ralph.offinger@gmail.com',
-      url='https://github.com/ralph-hm/nagios_check_paloalto',
+      author="Christian Jonak-Möchel",
+      author_email='christian@jonak.org',
+      url='https://github.com/TeraIT-at/check_paloalto_ng',
       install_requires=requirements,
       packages=['check_pa', 'check_pa.modules'],
       entry_points={
@@ -44,12 +44,14 @@ setup(name='check_paloalto',
           'Intended Audience :: System Administrators',
           'Topic :: System :: Monitoring',
           'License :: OSI Approved :: Common Public License',
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.3',
           'Programming Language :: Python :: 3.4',
           'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
       ],
       keywords='paloalto icinga nagios check',
       zip_safe=False,
