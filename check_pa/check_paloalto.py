@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe
 
 
 @nagiosplugin.guarded
@@ -122,6 +122,28 @@ def parse_args(args):
     metavar='MIN', type=int, default=1,
     help='Warning if functional PSU is lower than specified. (default: %(default)s)')
     parser_powersupply.set_defaults(func=powersupply)
+
+
+    parser_pppoe = subparsers.add_parser(
+        'pppoe',
+        help='check the pppoe interface.')
+
+    parser_pppoe.add_argument(
+        '-i', '--interface',
+        help='PA interface name',
+        nargs='?',
+        required=True,
+    )
+    parser_pppoe.add_argument(
+    '--expect-down',
+    action='store_true',
+    help='Expect PPPOE session to be down. (default: %(default)s)')
+
+    parser_pppoe.add_argument(
+        '-m', '--mtu',
+        metavar='MTU', type=int, default=1492, 
+        help='Minimum expected MTU (default: %(default)s)')
+    parser_pppoe.set_defaults(func=pppoe)
 
     # Sub-Parser for command 'sessinfo'.
     parser_sessinfo = subparsers.add_parser(
