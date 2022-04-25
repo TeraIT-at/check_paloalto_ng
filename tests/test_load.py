@@ -10,7 +10,7 @@ Tests for `check_paloalto` modules.
 
 import pytest
 import responses
-from nagiosplugin.state import ServiceState
+import nagiosplugin.state as state
 
 import check_pa.modules.load
 import utils
@@ -44,7 +44,7 @@ class TestLoad(object):
                 check.main(verbose=3)
 
         assert check.exitcode == 0
-        assert check.state == ServiceState(code=0, text='ok')
+        assert check.state == state.Ok
         assert check.summary_str == 'CPU0: 0.0%, CPU1: 2.0%, CPU2: 4.0%, ' \
                                     'CPU3: 4.0%, CPU4: 5.0%, CPU5: 6.0%'
 
@@ -69,5 +69,5 @@ class TestLoad(object):
                 check.main(verbose=3)
 
         assert check.exitcode == 2
-        assert check.state == ServiceState(code=2, text='critical')
+        assert check.state == state.Critical
         assert check.summary_str == 'CPU5 is 6% (outside range 0:5)'

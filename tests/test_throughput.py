@@ -11,7 +11,7 @@ Tests for `check_paloalto` modules.
 import mock
 import pytest
 import responses
-from nagiosplugin.state import ServiceState
+import nagiosplugin.state as state
 
 import check_pa.modules.throughput
 import utils
@@ -90,7 +90,7 @@ class TestThroughput(object):
                         check.main(verbose=3)
 
             assert check.exitcode == 0
-            assert check.state == ServiceState(code=0, text='ok')
+            assert check.state == state.Ok
 
             # 3000000 Byte = 3 MByte = 24 Mbit in 1 second = 24.0 Mb/s
             assert check.summary_str == 'Input is 24.0 Mb/s - Output is 24.0 ' \
@@ -139,7 +139,7 @@ class TestThroughput(object):
                         check.main(verbose=3)
 
             assert check.exitcode == 0
-            assert check.state == ServiceState(code=0, text='ok')
+            assert check.state == state.Ok
             assert check.summary_str == 'Input is 0.8 Mb/s - Output is 0.8 ' \
                                         'Mb/s'
 
@@ -190,25 +190,25 @@ class TestThroughput(object):
         check = pa_1.check_pa(1441324800, 10, 10, "throughput1.xml")
 
         assert check.exitcode == 3
-        assert check.state == ServiceState(code=3, text='unknown')
+        assert check.state == state.Unknown
         assert check.summary_str == 'Difference between old timestamp and new timestamp is less or equal 0: If it is the first time you run the script, please execute it again!'
 
         check = pa_2.check_pa(1441324810, 110, 110, "throughput1.xml")
 
         assert check.exitcode == 3
-        assert check.state == ServiceState(code=3, text='unknown')
+        assert check.state == state.Unknown
         assert check.summary_str == 'Difference between old timestamp and new timestamp is less or equal 0: If it is the first time you run the script, please execute it again!'
 
         check = pa_1.check_pa(1441324801, 1000000, 1000000, "throughput1.xml")
         assert check.exitcode == 0
-        assert check.state == ServiceState(code=0, text='ok')
+        assert check.state == state.Ok
         # 1000000 Byte = 1 MByte = 8 Mbit in 1 second = 8.0 Mb/s
         assert check.summary_str == 'Input is 8.0 Mb/s - Output is 8.0 ' \
                                     'Mb/s'
 
         check = pa_2.check_pa(1441324811, 1000000, 1000000, "throughput1.xml")
         assert check.exitcode == 0
-        assert check.state == ServiceState(code=0, text='ok')
+        assert check.state == state.Ok
         # 1000000 Byte = 1 MByte = 8 Mbit in 1 second = 8.0 Mb/s
         assert check.summary_str == 'Input is 8.0 Mb/s - Output is 8.0 ' \
                                     'Mb/s'
@@ -256,7 +256,7 @@ class TestThroughput(object):
                         check.main(verbose=3)
 
             assert check.exitcode == 3
-            assert check.state == ServiceState(code=3, text='unknown')
+            assert check.state == state.Unknown
             assert check.summary_str == 'Couldn\'t get a valid value: Found throughput less then old!'
 
     @responses.activate
@@ -311,7 +311,7 @@ class TestThroughput(object):
                 assert time == now
 
         assert check.exitcode == 3
-        assert check.state == ServiceState(code=3, text='unknown')
+        assert check.state == state.Unknown
         assert check.summary_str == 'Couldn\'t get a valid value: Found throughput less then old!'
 
     @responses.activate
@@ -357,7 +357,7 @@ class TestThroughput(object):
                         check.main(verbose=3)
 
             assert check.exitcode == 3
-            assert check.state == ServiceState(code=3, text='unknown')
+            assert check.state == state.Unknown
             assert check.summary_str == 'Difference between old timestamp ' \
                                         'and new timestamp is less or equal 0: ' \
                                         'If it is the first time you run the ' \
@@ -407,5 +407,5 @@ class TestThroughput(object):
                         check.main(verbose=3)
 
             assert check.exitcode == 3
-            assert check.state == ServiceState(code=3, text='unknown')
+            assert check.state == state.Unknown
             assert check.summary_str == 'Couldn\'t get a valid value!'

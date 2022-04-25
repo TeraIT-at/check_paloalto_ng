@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response status="success">
+  <result>
+    <power-supply>
+      <Slot1>
+        <entry>
+          <slot>1</slot>
+          <alarm>False</alarm>
+          <Inserted>True</Inserted>
+          <description>Power Supply #1</description>
+          <min>True</min>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <alarm>False</alarm>
+          <Inserted>True</Inserted>
+          <description>Power Supply #2</description>
+          <min>True</min>
+        </entry>
+      </Slot1>
+    </power-supply>
+    <thermal>
+      <Slot1>
+        <entry>
+          <slot>1</slot>
+          <description>Temperature @ U48</description>
+          <min>0.0</min>
+          <max>60.0</max>
+          <alarm>False</alarm>
+          <DegreesC>53.5</DegreesC>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>Temperature @ U49</description>
+          <min>0.0</min>
+          <max>60.0</max>
+          <alarm>False</alarm>
+          <DegreesC>53.0</DegreesC>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>Temperature @ Cavium Core</description>
+          <min>0.0</min>
+          <max>80.0</max>
+          <alarm>False</alarm>
+          <DegreesC>58.0625</DegreesC>
+        </entry>
+      </Slot1>
+    </thermal>
+    <power>
+      <Slot1>
+        <entry>
+          <slot>1</slot>
+          <description>0.85V Power Rail</description>
+          <min>0.76</min>
+          <Volts>0.848</Volts>
+          <alarm>False</alarm>
+          <max>0.94</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>0.9V Power Rail</description>
+          <min>0.81</min>
+          <Volts>0.895333333333</Volts>
+          <alarm>False</alarm>
+          <max>0.99</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>1.2V Power Rail</description>
+          <min>1.08</min>
+          <Volts>1.18666666667</Volts>
+          <alarm>False</alarm>
+          <max>1.32</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>1.8V Power Rail</description>
+          <min>1.62</min>
+          <Volts>1.79</Volts>
+          <alarm>False</alarm>
+          <max>1.98</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>2.5V Power Rail</description>
+          <min>2.25</min>
+          <Volts>2.488</Volts>
+          <alarm>False</alarm>
+          <max>2.75</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>3.3V Power Rail</description>
+          <min>2.97</min>
+          <Volts>3.34</Volts>
+          <alarm>False</alarm>
+          <max>3.63</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>3.3V SD Power Rail</description>
+          <min>2.97</min>
+          <Volts>3.268</Volts>
+          <alarm>False</alarm>
+          <max>3.63</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>5.0V Power Rail</description>
+          <min>4.5</min>
+          <Volts>4.992</Volts>
+          <alarm>False</alarm>
+          <max>5.5</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>12.0V IN A Power Rail</description>
+          <min>11.4</min>
+          <Volts>12.072</Volts>
+          <alarm>False</alarm>
+          <max>12.6</max>
+        </entry>
+        <entry>
+          <slot>1</slot>
+          <description>12.0V IN B Power Rail</description>
+          <min>11.4</min>
+          <Volts>12.128</Volts>
+          <alarm>False</alarm>
+          <max>12.6</max>
+        </entry>
+      </Slot1>
+    </power>
+  </result>
+</response>

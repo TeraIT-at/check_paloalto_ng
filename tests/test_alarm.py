@@ -10,7 +10,7 @@ Tests for `check_paloalto` modules.
 
 import pytest
 import responses
-from nagiosplugin.state import ServiceState
+import nagiosplugin.state as state
 
 import utils
 from check_pa.modules import environmental
@@ -40,7 +40,7 @@ class TestAlarm(object):
                 check.main(verbose=3)
 
             assert check.exitcode == 0
-            assert check.state == ServiceState(code=0, text='ok')
+            assert check.state == state.Ok
             assert check.summary_str == 'No alarms found.'
 
     @responses.activate
@@ -61,6 +61,6 @@ class TestAlarm(object):
                 check.main(verbose=3)
 
             assert check.exitcode == 2
-            assert check.state == ServiceState(code=2, text='critical')
+            assert check.state == state.Critical
             assert check.summary_str == 'Alarm(s) found: Temperature @ Test1, ' \
                                         'Temperature @ Test2'

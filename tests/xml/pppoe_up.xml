@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response status="success">
+  <result>
+    <entry name="ethernet1/1">
+      <interface>ethernet1/1</interface>
+      <pppoe-state>Connected</pppoe-state>
+      <ppp-state>Connected</ppp-state>
+      <connected-since>Sun Apr 24 22:21:21 2022
+</connected-since>
+      <connection-up-for>0 days, 16:53:12</connection-up-for>
+      <ac><![CDATA[XYZ]]></ac>
+      <ac-mac>12:23:45:67:89:AB</ac-mac>
+      <auth-via>PAP</auth-via>
+      <passive-mode>Disabled</passive-mode>
+      <user-name>id@isp</user-name>
+      <local-ip>10.0.0.1</local-ip>
+      <dns1>192.168.0.1</dns1>
+      <dns2>192.168.0.2</dns2>
+      <wins1>0.0.0.0</wins1>
+      <wins2>0.0.0.0</wins2>
+      <remote-ip>172.16.0.1</remote-ip>
+      <session-id>1337</session-id>
+      <link-mtu>1492</link-mtu>
+      <counters>
+        <pppoe-ctrl-rcvd>2</pppoe-ctrl-rcvd>
+        <pppoe-ctrl-sent>40</pppoe-ctrl-sent>
+        <ppp-ctrl-rcvd>22843</ppp-ctrl-rcvd>
+        <ppp-ctrl-sent>22844</ppp-ctrl-sent>
+      </counters>
+    </entry>
+  </result>
+</response>

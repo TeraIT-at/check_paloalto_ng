@@ -11,7 +11,7 @@ Tests for `check_paloalto` modules.
 import mock
 import pytest
 import responses
-from nagiosplugin.state import ServiceState
+import nagiosplugin.state as state
 
 import check_pa.modules.certificate
 import utils
@@ -47,7 +47,7 @@ class TestCertificates(object):
                     check.main(verbose=3)
 
         assert check.exitcode == 1
-        assert check.state == ServiceState(code=1, text='warning')
+        assert check.state == state.Warn
         assert check.summary_str == 'test-certificate1 expires in 1 days, ' \
                                     'test-certificate2 expires in 2 days'
 
@@ -72,6 +72,6 @@ class TestCertificates(object):
                     check.main(verbose=3)
 
         assert check.exitcode == 0
-        assert check.state == ServiceState(code=0, text='ok')
+        assert check.state == state.Ok
         assert check.summary_str == 'The next certificate will expire ' \
                                     'in 31 days.'

@@ -10,7 +10,7 @@ Tests for `check_paloalto` modules.
 
 import pytest
 import responses
-from nagiosplugin.state import ServiceState
+import nagiosplugin.state as state
 
 import check_pa.modules.thermal
 import utils
@@ -43,7 +43,7 @@ class TestThermal(object):
                 check.main(verbose=3)
 
             assert check.exitcode == 0
-            assert check.state == ServiceState(code=0, text='ok')
+            assert check.state == state.Ok
             assert check.summary_str == 'Temperature @ Test1 is 30 degrees' \
                                         ' Celsius, Temperature @ Test2 is 34' \
                                         ' degrees Celsius, Temperature @' \
@@ -71,7 +71,7 @@ class TestThermal(object):
                 check.main(verbose=3)
 
             assert check.exitcode == 2
-            assert check.state == ServiceState(code=2, text='critical')
+            assert check.state == state.Critical
             assert check.summary_str == 'Too high temperature: Temperature @ ' \
                                         'Test1 is 30.6 (outside range 0:30) ' \
                                         'degrees Celsius'

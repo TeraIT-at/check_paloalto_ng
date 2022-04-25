@@ -11,7 +11,7 @@ Tests for `check_paloalto` modules.
 import mock
 import pytest
 import responses
-from nagiosplugin.state import ServiceState
+import nagiosplugin.state as state
 
 import check_pa.modules.sessioninfo
 import utils
@@ -51,7 +51,7 @@ class TestSessionInfo(object):
                     check.main(verbose=3)
 
             assert check.exitcode == 0
-            assert check.state == ServiceState(code=0, text='ok')
+            assert check.state == state.Ok
             assert check.summary_str == 'Active sessions: 4480 ' \
                                         '/ Throughput (kbps): 24266'
 
@@ -82,7 +82,7 @@ class TestSessionInfo(object):
                     check.main(verbose=3)
 
             assert check.exitcode == 1
-            assert check.state == ServiceState(code=1, text='warning')
+            assert check.state == state.Warn
             assert check.summary_str == 'session is 4480 (outside range 0:4000)'
 
     @responses.activate
@@ -112,5 +112,5 @@ class TestSessionInfo(object):
                     check.main(verbose=3)
 
             assert check.exitcode == 2
-            assert check.state == ServiceState(code=2, text='critical')
+            assert check.state == state.Critical
             assert check.summary_str == 'session is 5002 (outside range 0:5000)'
