@@ -16,20 +16,22 @@ def create_check(args):
     :return: the power-supply check.
     """
     return np.Check(
-        PowerSupply(args.host, args.token),
+        PowerSupply(args.host, args.token, args.min),
         PowerSupplyAlarmContext('alarm'),
         PowerSupplyInsertedContext('inserted'),
         np.ScalarContext('functional', critical=np.Range("@"+str(args.min-1))),
-        PowerSupplySummary(args.min)
+        PowerSupplySummary()
         )
 
 
 class PowerSupply(np.Resource):
     """Reads the information about power supplies of the Palo Alto Firewall System."""
 
-    def __init__(self, host, token):
+    def __init__(self, host, token, minimum_powersupplies):
         self.host = host
         self.token = token
+        self.minimum_powersupplies = minimum_powersupplies
+        self.functional_powersupplies = 0
         self.cmd = '<show><system><environmentals>' \
                    '</environmentals></system></show>'
         self.xml_obj = XMLReader(self.host, self.token, self.cmd)
@@ -42,23 +44,30 @@ class PowerSupply(np.Resource):
         soup = self.xml_obj.read()
         powersupplys = soup.find('power-supply')
         powersupplyslots = powersupplys.find_all("entry")
-        functional = 0
+        self.results = list()
+
+        for entry in powersupplyslots:
+            if entry.Inserted.text == "True" and entry.alarm.text == "False":
+                self.functional_powersupplies = self.functional_powersupplies + 1
+
+        self.results.append(np.Metric("Functional Power Supplies", self.functional_powersupplies,context="functional"))
 
         for entry in powersupplyslots:
             if entry.Inserted.text:
-                yield np.Metric("Slot "+entry.slot.text+"-"+entry.description.text+"-"+"Inserted", 1 if entry.Inserted.text == "True" else 0,context="inserted")
+                self.results.append(np.Metric("Slot "+entry.slot.text+"-"+entry.description.text+"-"+"Inserted", 1 if entry.Inserted.text == "True" else 0,context="inserted"))
 
             if entry.alarm.text:
-                yield np.Metric("Slot "+entry.slot.text+"-"+entry.description.text+"-"+"Alarm", 1 if entry.alarm.text == "True" else 0,context="alarm")
+                if entry.alarm.text == "True":
+                    if (self.functional_powersupplies >= self.minimum_powersupplies):
+                        val = int(np.Warn)
+                    else:
+                        val = int(np.Critical)
+                else:
+                    val = int(np.Ok)
 
-            if entry.Inserted.text == "True" and entry.alarm.text == "False":
-                functional = functional + 1
+                self.results.append(np.Metric("Slot "+entry.slot.text+"-"+entry.description.text+"-"+"Alarm", val,context="alarm"))
 
-        yield np.Metric("Functional Power Supplies", functional,context="functional")
-
-            
-
-from pprint import pprint
+        return self.results
 
 class PowerSupplyAlarmContext(np.Context):
     def __init__(self, name, fmt_metric='{name} is {valueunit}',
@@ -67,11 +76,13 @@ class PowerSupplyAlarmContext(np.Context):
                                                    result_cls)
     def performance(self, metric, resource):
         return np.Performance(metric.name, metric.value, metric.uom,
-                           None, True, metric.min, metric.max)
+                           None, None, metric.min, metric.max)
 
     def evaluate(self, metric, resource):
-        if metric.value == 1:
+        if metric.value == int(np.Critical):
             return self.result_cls(np.Critical, None, metric)
+        elif metric.value == int(np.Warn):
+            return self.result_cls(np.Warn, None, metric)
         else:
             return self.result_cls(np.Ok, None, metric)
 
@@ -83,16 +94,13 @@ class PowerSupplyInsertedContext(np.Context):
                                                    result_cls)
     def performance(self, metric, resource):
         return np.Performance(metric.name, metric.value, metric.uom,
-                           False, None, metric.min, metric.max)
+                           None, None, metric.min, metric.max)
 
     def evaluate(self, metric, resource):
       return self.result_cls(np.Ok, None, metric)
 
 
 class PowerSupplySummary(np.Summary):
-    def __init__(self, minsupplies):
-        self.minsupplies = minsupplies
-
 
     def ok(self, results):
         res = ""
@@ -103,11 +111,38 @@ class PowerSupplySummary(np.Summary):
 
     def problem(self, results):
         s = ""
-        l = []
-        for alarm in results.by_state[np.Critical]:
-            s += 'Too few Power Supplies: '
-            if alarm.metric.value:
-                l.append(alarm.metric.name + " is " + str(alarm.metric.value))
-        s += ', '.join(l)
-        s += ". (At least " + str(self.minsupplies) + " expected)"
+        power_issues = []
+        alarms = []
+        minimum = results.first_significant.resource.minimum_powersupplies
+        functional = results.first_significant.resource.functional_powersupplies
+
+
+        if results.most_significant_state == np.Critical:
+            for alarm in results.by_state[np.Critical]:
+                if alarm.metric.context == "functional":
+                    if alarm.metric.value:
+                        power_issues.append(alarm.metric.name)
+                if alarm.metric.context == "alarm":
+                    if alarm.metric.value:
+                        alarms.append(alarm.metric.name)
+
+        if results.most_significant_state == np.Warn:
+            for alarm in results.by_state[np.Warn]:
+                if alarm.metric.context == "alarm":
+                    if alarm.metric.value:
+                        alarms.append(alarm.metric.name)
+
+        if len(power_issues) > 0:
+            if results.most_significant_state == np.Critical:
+                s += 'Too few power supplies: ' + str(functional) + " (At least " + str(minimum) + " expected)"
+
+        if len(power_issues) == 0 or results.most_significant_state == np.Warn:
+                s += 'Working power supplies: ' + str(functional)
+
+        if len(alarms) > 0:
+            if len(s) > 0:
+               s += ", "
+            s += 'power supplies in alarm state: '
+            s += ", ".join(alarms)
+
         return s

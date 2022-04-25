@@ -141,7 +141,7 @@ def parse_args(args):
 
     parser_pppoe.add_argument(
         '-m', '--mtu',
-        metavar='MTU', type=int, default=1492, 
+        metavar='MTU', type=int, default=1492, dest="expect_mtu",
         help='Minimum expected MTU (default: %(default)s)')
     parser_pppoe.set_defaults(func=pppoe)
 

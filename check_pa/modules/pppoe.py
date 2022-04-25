@@ -14,11 +14,11 @@ def create_check(args):
     :return: the pppoe check.
     """
     return np.Check(
-        PPPoEInterface(args.host, args.token, args.interface, args.expect_down, args.mtu),
+        PPPoEInterface(args.host, args.token, args.interface, args.expect_down, args.expect_mtu),
         PPPoEStateContext('pppoe-state'),
         PPPoEStateContext('ppp-state'),
         PPPoEMTUContext('mtu'),
-        PPPoESummary(args.expect_down, args.mtu)
+        PPPoESummary(args.expect_down, args.expect_mtu, args.interface)
         )
 
 
@@ -62,6 +62,9 @@ class PPPoEMTUContext(np.Context):
                            None, resource.expect_mtu, metric.min, metric.max)
 
     def evaluate(self, metric, resource):
+        if resource.expect_down:
+            return self.result_cls(np.Ok, None, metric)
+
         return self.result_cls(np.Critical if (metric.value < resource.expect_mtu) else np.Ok, None, metric)
 
 
@@ -81,12 +84,27 @@ class PPPoEStateContext(np.Context):
             return self.result_cls(np.Ok if resource.expect_down == True else np.Critical, None, metric)
 
 class PPPoESummary(np.Summary):
-    def __init__(self, expect_down, expect_mtu):
+    def __init__(self, expect_down, expect_mtu, interface):
         self.expect_down = expect_down
         self.expect_mtu = expect_mtu
+        self.interface = interface
+
+    def ok(self, results):
+        s = self.interface + ": "
+        l = []
+        for result in results.by_state[np.Ok]:
+            if result.context.name == "pppoe-state":
+                l.append("PPPoE is " + ("UP" if result.metric.value == 1 else "DOWN"))
+            if result.context.name == "ppp-state":
+                l.append("PPP is " + ("UP" if result.metric.value == 1 else "DOWN"))
+            if result.context.name == "mtu":
+                l.append("MTU is " + str(result.metric.value))
+
+        s += ', '.join(l)
+        return s
 
     def problem(self, results):
-        s = ""
+        s = self.interface + ": "
         l = []
         for result in results.by_state[np.Critical]:
             if result.context.name == "pppoe-state":
