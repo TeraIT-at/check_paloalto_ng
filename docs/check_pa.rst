@@ -1,45 +1,45 @@
-check_pa package
-================
+check\_pa package
+=================
 
 Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
-    check_pa.modules
+   check_pa.modules
 
 Submodules
 ----------
 
-check_pa.check_paloalto module
-------------------------------
+check\_pa.check\_paloalto module
+--------------------------------
 
 .. automodule:: check_pa.check_paloalto
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-check_pa.utils module
----------------------
+check\_pa.utils module
+----------------------
 
 .. automodule:: check_pa.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-check_pa.xml_reader module
---------------------------
+check\_pa.xml\_reader module
+----------------------------
 
 .. automodule:: check_pa.xml_reader
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------
 
 .. automodule:: check_pa
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

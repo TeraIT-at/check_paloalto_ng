@@ -43,6 +43,7 @@ Command-line usage::
       {diskspace,certificates,load,useragent,environmental,powersupply,pppoe,sessinfo,thermal,throughput}
         diskspace           check used diskspace.
         certificates        check the certificate store for expiring certificates: Outputs is a warning, if a certificate is in range.
+        licenses            check the licenses for expiring licenses: Outputs is a warning, if a license is in range.
         load                check the CPU load.
         useragent           check for running useragents.
         environmental       check if an alarm is found.
