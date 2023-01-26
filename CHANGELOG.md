@@ -3,6 +3,10 @@ History
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2023-01-26)
+### Feature
+* Add additional checks from @frank-m ([`4ff9662`](https://github.com/TeraIT-at/check_paloalto_ng/commit/4ff966288062adac631e8f8ce355b4eb7457ab70))
+
 0.5.0 (2023-01-26)
 =================
 
