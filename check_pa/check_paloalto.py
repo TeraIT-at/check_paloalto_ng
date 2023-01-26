@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe
+from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe, licenses
 
 
 @nagiosplugin.guarded
@@ -78,6 +78,26 @@ def parse_args(args):
         (default: %(default)s)
         ''')
     parser_certificates.set_defaults(func=certificate)
+
+    # Sub-Parser for command 'licenses'.
+    parser_licenses = subparsers.add_parser(
+        'licenses',
+        help='check the licenses for '
+             'expiring licenses: Outputs is a warning, '
+             'if a license is in range.')
+    parser_licenses.add_argument(
+        '-ex', '--exclude', default='', help='exclude licenses from '
+                                             'check by name.')
+    
+    parser_licenses.add_argument('-w', '--warn',
+                                  metavar='WARN', type=int, default=90,
+                                  help='Warning if remaining license days is less than.'
+                                       '(default: %(default)s)')
+    parser_licenses.add_argument('-c', '--crit',
+                                  metavar='CRIT', type=int, default=30,
+                                  help='Critical if remaining license days is less than.'
+                                       '(default: %(default)s)')
+    parser_licenses.set_defaults(func=licenses)
 
     # Sub-Parser for command 'load'.
     parser_load = subparsers.add_parser(
