@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe, licenses
+from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe, licenses, interface
 
 
 @nagiosplugin.guarded
@@ -88,7 +88,7 @@ def parse_args(args):
     parser_licenses.add_argument(
         '-ex', '--exclude', default='', help='exclude licenses from '
                                              'check by name.')
-    
+
     parser_licenses.add_argument('-w', '--warn',
                                   metavar='WARN', type=int, default=90,
                                   help='Warning if remaining license days is less than.'
@@ -205,6 +205,46 @@ def parse_args(args):
         required=True,
     )
     parser_throughput.set_defaults(func=throughput)
+
+    # Sub-Parser for command 'interface'.
+    parser_interface = subparsers.add_parser(
+        'interface',
+        help='check the interfaces. If none specified will check all.')
+
+    parser_interface.add_argument(
+        '-i', '--interface',
+        help='PA interface name. Give names, seperated by comma.',
+        nargs='?',
+    )
+
+    parser_interface.add_argument(
+        '-x', '--exclude',
+        help='Exclude interfaces. Give names, seperated by comma.',
+        nargs='?',
+    )
+
+    parser_interface.set_defaults(func=interface)
+
+    # Sub-Parser for command 'cluster'.
+    parser_cluster = subparsers.add_parser(
+        'cluster',
+        help='check the cluster status.')
+
+    parser_cluster.add_argument(
+        '-l', '--localstate',
+        help='Expected Local Node Cluster State, either active or passive',
+        nargs='?',
+        required=True,
+    )
+
+    parser_cluster.add_argument(
+        '-p', '--peerstate',
+        help='Expected Peer Node Cluster State, either active or passive',
+        nargs='?',
+        required=True,
+    )
+
+    parser_cluster.set_defaults(func=cluster)
 
     return parser.parse_args(args)
 
