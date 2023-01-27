@@ -5,7 +5,7 @@ import nagiosplugin
 
 sys.path.append('modules')
 
-from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe, licenses, interface
+from check_pa.modules import certificate, cluster, throughput, diskspace, useragent, environmental, sessioninfo, thermal, load, powersupply, pppoe, licenses, interface, antivirus, threat, bgp, qos, reports
 
 
 @nagiosplugin.guarded
@@ -204,6 +204,14 @@ def parse_args(args):
         nargs='?',
         required=True,
     )
+    parser_throughput.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=8000000000,
+        help='Warning if throughput is greater. In bps (default: %(default)s)')
+    parser_throughput.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=9000000000,
+        help='Critical if throughput is greater. In bps (default: %(default)s)')
     parser_throughput.set_defaults(func=throughput)
 
     # Sub-Parser for command 'interface'.
@@ -245,6 +253,99 @@ def parse_args(args):
     )
 
     parser_cluster.set_defaults(func=cluster)
+
+    # Sub-Parser for command 'antivirus'.
+    parser_antivirus = subparsers.add_parser(
+        'antivirus',
+        help='check antivirus informations.')
+    parser_antivirus.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=2,
+        help='Warning if antivirus definition date is older. In days (default: %(default)s)')
+    parser_antivirus.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=4,
+        help='Critical if antivirus definition date is older. In days (default: %(default)s)')
+    parser_antivirus.set_defaults(func=antivirus)
+
+    # Sub-Parser for command 'threat'.
+    parser_threat = subparsers.add_parser(
+        'threat',
+        help='check threat informations.')
+    parser_threat.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=5,
+        help='Warning if threat definition date is older. In days (default: %(default)s)')
+    parser_threat.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=10,
+        help='Critical if threat definition date is older. In days (default: %(default)s)')
+    parser_threat.set_defaults(func=threat)
+
+    # Sub-Parser for command 'threat'.
+    parser_bgp = subparsers.add_parser(
+        'bgp',
+        help='check bgp informations.')
+    parser_bgp.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=5,
+        help='Warning if bgp routes/peer count is lesser (default: %(default)s)')
+    parser_bgp.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=10,
+        help='Critical if bgp routes/peer count is lesser (default: %(default)s)')
+    parser_bgp.add_argument(
+        '-m', '--mode',
+        metavar="MODE", type=str,
+        help='Mode: routes or peers',
+        required=True)
+    parser_bgp.add_argument(
+        '-p', '--peer',
+        metavar="PEER", type=str,
+        help='Peer status (name, critical if not Established)',
+        required=False)
+    parser_bgp.set_defaults(func=bgp)
+
+    # Sub-Parser for command 'qos'
+    parser_qos = subparsers.add_parser(
+        'qos',
+        help='check quality of service.')
+    parser_qos.add_argument(
+        '-k', '--klass',
+        metavar='KLASS', default='all',
+        help='Define qos class',
+        nargs='?',
+       )
+    parser_qos.add_argument(
+        '-w', '--warn',
+        metavar='WARN', type=int, default=8000000,
+        help='Warning if qos is higher. In kbps (default: %(default))')
+    parser_qos.add_argument(
+        '-c', '--crit',
+        metavar='CRIT', type=int, default=9000000,
+        help='Critical if qos is higher. In kbps (default: %(default))')
+    parser_qos.set_defaults(func=qos)
+
+    # Sub-Parser for command 'reports'.
+    parser_reports = subparsers.add_parser(
+        'reports',
+        help='get reports values')
+    parser_reports.add_argument(
+        '-r', '--report',
+        metavar="REPORT", type=str,
+        help='Report name (ex: top-applications)',
+        required=True)
+    parser_reports.add_argument(
+        '-n', '--name',
+        metavar="NAME", type=str,
+        help='Value name (ex: name)',
+        required=True)
+    parser_reports.add_argument(
+        '-t', '--type',
+        metavar="TYPE", type=str,
+        help='Value type (ex: nbsess)',
+        required=True)
+    parser_reports.set_defaults(func=reports)
 
     return parser.parse_args(args)
 

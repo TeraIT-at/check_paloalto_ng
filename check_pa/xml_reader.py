@@ -39,13 +39,35 @@ class XMLReader:
                              % result)
         return soup
 
-    def build_request_url(self):
+    def report(self):
+        """Performs a request with a given command to the XML API and reads
+        the output.
+
+        :return: The XML output parsed by soup.
+        """
+        requests.packages.urllib3.disable_warnings()
+        resp = requests.get(self.build_request_url(report=True), verify=False)
+        if resp.status_code != 200:
+            raise CheckError('Expected status code: 200 (OK), returned'
+                             ' status code was: %d' % resp.status_code)
+        soup = BeautifulSoup(resp.content, "lxml-xml")
+        result = soup.report['reportname']
+        if result != self.cmd:
+            raise CheckError('Request didn\'t succeed, result was %s'
+                             % result)
+        return soup
+
+    def build_request_url(self,report=False):
         """Creates the URL for a specific XML request.
 
         :return: URL.
         """
-        request_url = 'https://%s/api/?key=%s&type=op&cmd=%s' % (
-            self.host, self.token, self.cmd)
+        if report:
+            request_url = 'https://%s/api/?key=%s&type=report&async=no&reporttype=dynamic&period=last-15-minutes&reportname=%s' % (
+                self.host, self.token, self.cmd)
+        else:
+            request_url = 'https://%s/api/?key=%s&type=op&cmd=%s' % (
+                self.host, self.token, self.cmd)
         return request_url
 
 

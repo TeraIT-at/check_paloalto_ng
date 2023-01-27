@@ -5,12 +5,13 @@ Credits
 Development Lead
 ----------------
 
-* Christian Jonak-Möchel <christian@jonak.org>
+* Ralph Offinger <ralph.offinger@gmail.com>
 
 Contributors
 ------------
 
 * Thomas Fischer <mail@se-di.de>
+* Rémi Verchère <remi@verchere.fr>
 
 Special Thanks
 -------------
