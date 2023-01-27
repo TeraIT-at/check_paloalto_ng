@@ -36,11 +36,11 @@ Command-line usage::
 
     usage: check_paloalto [-h] -H HOST -T TOKEN [-v] [-t TIMEOUT] [--reset]
                       [--version]
-                      {diskspace,certificates,load,useragent,environmental,sessinfo,thermal,throughput,antivirus,threat}
+                      {diskspace,certificates,licenses,load,useragent,environmental,powersupply,pppoe,sessinfo,thermal,throughput,interface,cluster,antivirus,threat,bgp,qos,reports}
                       ...
 
     positional arguments:
-      {diskspace,certificates,load,useragent,environmental,powersupply,pppoe,sessinfo,thermal,throughput}
+      {diskspace,certificates,licenses,load,useragent,environmental,powersupply,pppoe,sessinfo,thermal,throughput,interface,cluster,antivirus,threat,bgp,qos,reports}
         diskspace           check used diskspace.
         certificates        check the certificate store for expiring certificates: Outputs is a warning, if a certificate is in range.
         licenses            check the licenses for expiring licenses: Outputs is a warning, if a license is in range.
@@ -52,8 +52,13 @@ Command-line usage::
         sessinfo            check important session parameters.
         thermal             check the temperature.
         throughput          check the throughput.
+        interface           check the interfaces. If none specified will check all.
+        cluster             check the cluster status.
         antivirus           check antivirus informations.
         threat              check threat informations.
+        bgp                 check bgp informations.
+        qos                 check quality of service.
+        reports             get reports values
 
     optional arguments:
       -h, --help            show this help message and exit
