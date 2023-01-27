@@ -40,11 +40,17 @@ class DiskSpace(np.Resource):
         """
         _log.info('Reading XML from: %s', self.xml_obj.build_request_url())
         soup = self.xml_obj.read()
-        available_hdds = re.findall('(sda\d.*?)(?=/)', soup.result.string)
-        for hdd in available_hdds:
-            sda = re.findall('(sda\d)', hdd)[0]
-            percent = int(re.findall('([0-9]+%)', hdd)[0].replace("%", ""))
-            yield np.Metric(sda, percent, '%', context='diskspace')
+        available_disks = re.findall('((sda\d.*?)|(md\d.*?)|(mmcblk\d*p\d.*?))(?=/)', soup.result.string)
+#        available_disks = re.findall('(mmcblk\d*p\d.*?)(?=/)', soup.result.string)
+
+        for disk in available_disks:
+            _log.debug("disk: "+str(disk))
+            diskname = re.findall('((sda\d)|(mmcblk\d*p\d)|(md\d))', disk[0])[0][0]
+            diskname = str(diskname)
+            _log.debug("name: "+str(diskname))
+            percent = int(re.findall('([0-9]+%)', disk[0])[0].replace("%", ""))
+            _log.debug("percent: "+str(percent))
+            yield np.Metric(diskname, percent, '%', context='diskspace')
 
 
 class DiskSpaceSummary(np.Summary):
@@ -55,7 +61,7 @@ class DiskSpaceSummary(np.Summary):
         for sda in results.results:
             s = '%s: %s%%' % (sda.metric.name, sda.metric.value)
             l.append(s)
-        _log.debug('HDD count: %d' % len(l))
+        _log.debug('Disk/Partition count: %d' % len(l))
         output = ", ".join(l)
         return str(output)
 
