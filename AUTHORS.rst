@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Ralph Offinger <ralph.offinger@gmail.com>
+* Christian Jonak-Möchel <christian@jonak.org>
 
 Contributors
 ------------
