@@ -4,7 +4,7 @@
 
 from setuptools import setup
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 
 setup(name='check_paloalto_ng',
       version=__version__,
