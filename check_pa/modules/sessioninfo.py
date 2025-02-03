@@ -16,18 +16,20 @@ def create_check(args):
     :return: the sessioninfo check.
     """
     return np.Check(
-        SessInfo(args.host, args.token),
+        SessInfo(args.host, args.token, args.verify_ssl, args.verbose),
         np.ScalarContext('session', args.warn, args.crit),
         np.ScalarContext('throughput'),
         SessSummary())
 
 
 class SessInfo(np.Resource):
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.verify_ssl = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><session><info></info></session></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.verify_ssl, self.verbose, self.cmd)
 
     def probe(self):
         """

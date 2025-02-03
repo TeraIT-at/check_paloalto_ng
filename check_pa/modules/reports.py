@@ -16,7 +16,7 @@ def create_check(args):
     :return: the bgp check.
     """
     return np.Check(
-        Reports(args.host, args.token, args.report, args.name, args.type),
+        Reports(args.host, args.token, args.verify_ssl, args.verbose, args.report, args.name, args.type),
         np.ScalarContext('reports'),
         ReportsSummary())
 
@@ -26,13 +26,15 @@ class Reports(np.Resource):
     Will fetch the reports informations  from the REST API and returns
     """
 
-    def __init__(self, host, token, reports, rname, rtype):
+    def __init__(self, host, token, verify_ssl, verbose, reports, rname, rtype):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = reports
         self.rname = rname
         self.rtype = rtype
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """
@@ -40,7 +42,7 @@ class Reports(np.Resource):
 
         :return: reports metric.
         """
-        _log.info('Reading XML from: %s', self.xml_obj.build_request_url(True))
+        _log.info(' XML from: %s', self.xml_obj.build_request_url(True))
         soup = self.xml_obj.report()
         result = soup.result
         #_log.debug('XML Result: \n%s', str(result))

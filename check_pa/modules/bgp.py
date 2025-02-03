@@ -17,12 +17,12 @@ def create_check(args):
     """
     if not hasattr(args, 'peer'):
         return np.Check(
-            Bgp(args.host, args.token, args.mode, None),
+            Bgp(args.host, args.token, args.verify_ssl, args.verbose, args.mode, peer=None),
             np.ScalarContext('bgp', '@~:%d' % args.warn, '@~:%d' % args.crit),
             BgpSummary())
     else:
         return np.Check(
-            Bgp(args.host, args.token, args.mode, args.peer),
+            Bgp(args.host, args.token, args.verbose, args.mode, args.peer),
             BgpPeerContext('bgp'),
             BgpSummary())
 
@@ -34,16 +34,19 @@ class Bgp(np.Resource):
     and critical (e. g. 2).
     """
 
-    def __init__(self, host, token, mode, peer):
+    def __init__(self, host, token, ssl_verify, verbose, mode, peer):
         self.host = host
         self.token = token
         self.mode = mode
         self.peer = peer
+        self.ssl_verify = ssl_verify
+        self.verbose = verbose
+
         if peer is not None:
             self.cmd = '<show><routing><protocol><bgp><peer><peer-name>%s</peer-name></peer></bgp></protocol></routing></show>' % self.peer
         else:
             self.cmd = '<show><routing><summary></summary></routing></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

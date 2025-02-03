@@ -14,7 +14,7 @@ def create_check(args):
     :return: the pppoe check.
     """
     return np.Check(
-        PPPoEInterface(args.host, args.token, args.interface, args.expect_down, args.expect_mtu),
+        PPPoEInterface(args.host, args.token, args.verify_ssl, args.verbose, args.interface, args.expect_down, args.expect_mtu),
         PPPoEStateContext('pppoe-state'),
         PPPoEStateContext('ppp-state'),
         PPPoEMTUContext('mtu'),
@@ -25,15 +25,17 @@ def create_check(args):
 class PPPoEInterface(np.Resource):
     """Reads the information about a pppoe interface of the Palo Alto Firewall System."""
 
-    def __init__(self, host, token, interface_name, expect_down, expect_mtu):
+    def __init__(self, host, token, verify_ssl, verbose, interface_name, expect_down, expect_mtu):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.interface_name = interface_name
         self.expect_down = expect_down
         self.expect_mtu = expect_mtu
         self.cmd = '<show><pppoe><interface>' + str(self.interface_name) + '</interface></pppoe></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
-        
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
+
 
     def probe(self):
         """
@@ -45,11 +47,11 @@ class PPPoEInterface(np.Resource):
         pppoe_state = soup.find("pppoe-state").text
         ppp_state = soup.find("ppp-state").text
         mtu = soup.find("link-mtu").text
-        
+
         yield np.Metric(interface+"-pppoe-pppoe-state", 1 if (pppoe_state and pppoe_state == "Connected") else 0,context="pppoe-state")
         yield np.Metric(interface+"-pppoe-ppp-state", 1 if (ppp_state and ppp_state == "Connected") else 0,context="ppp-state")
         yield np.Metric(interface+"-pppoe-mtu", int(mtu),context="mtu")
-        
+
 
 
 class PPPoEMTUContext(np.Context):
@@ -80,7 +82,7 @@ class PPPoEStateContext(np.Context):
     def evaluate(self, metric, resource):
         if metric.value == 1:
             return self.result_cls(np.Critical if resource.expect_down == True else np.Ok, None, metric)
-        else: 
+        else:
             return self.result_cls(np.Ok if resource.expect_down == True else np.Critical, None, metric)
 
 class PPPoESummary(np.Summary):

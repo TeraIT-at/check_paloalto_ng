@@ -26,7 +26,7 @@ def create_check(args):
     :return: the throughput check.
     """
     return np.Check(
-        Certificate(args.host, args.token, args.exclude),
+        Certificate(args.host, args.token, args.verify_ssl, args.verbose, args.exclude),
         CertificateContext('certificates', args.range),
         CertificateSummary(args.range))
 
@@ -40,13 +40,15 @@ class Certificate(np.Resource):
     If a certificate has been revoked or excluded, no warning will appear.
     """
 
-    def __init__(self, host, token, exclude):
+    def __init__(self, host, token, ssl_verify, verbose, exclude):
         self.host = host
         self.token = token
+        self.ssl_verify = ssl_verify
+        self.verbose = verbose
         self.cmd = '<show><config><running>' \
                    '<xpath>shared/certificate</xpath>' \
                    '</running></config></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
         self.exclude = str(exclude).split(",")
 
     def probe(self):

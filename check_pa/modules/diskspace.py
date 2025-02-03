@@ -17,7 +17,7 @@ def create_check(args):
     :return: the diskspace check.
     """
     return np.Check(
-        DiskSpace(args.host, args.token),
+        DiskSpace(args.host, args.token, args.verify_ssl, args.verbose),
         np.ScalarContext('diskspace', args.warn, args.crit),
         DiskSpaceSummary())
 
@@ -25,12 +25,14 @@ def create_check(args):
 class DiskSpace(np.Resource):
     """Reads the used disk space of the Palo Alto Firewall System."""
 
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><system><disk-space><%2Fdisk-space><%2Fsystem' \
                    '><%2Fshow>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

@@ -17,22 +17,24 @@ def create_check(args):
     """
 
     check = np.Check()
-    check.add(Cluster(args.host, args.token, args.localstate, args.peerstate))
+    check.add(Cluster(args.host, args.token, args.verify_ssl, args.verbose, args.localstate, args.peerstate))
     check.add(ClusterContext('alarm'))
     check.add(ClusterSummary())
 
     return check
 
 class Cluster(np.Resource):
-    def __init__(self, host, token, localstate, peerstate):
+    def __init__(self, host, token, verify_ssl, verbose, localstate, peerstate):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
         self.localstate = localstate
         self.peerstate = peerstate
+        self.verbose = verbose
         self.cmd = '<show><high-availability><state><%2Fstate' \
                    '>' \
                    '<%2Fhigh-availability><%2Fshow>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.verbose, self.cmd, self.ssl_verify)
 
     def probe(self):
         """
@@ -61,7 +63,7 @@ class Cluster(np.Resource):
             yield np.Metric(f'Cluster Local node status is {state} not {self.localstate}', True, context='alarm')
         else:
             yield np.Metric(f'Cluster Local node status is {state}', False, context='alarm')
-        
+
         # Check if the peer node is $secondarystate by checking <result><group><peer-info><state>$secondarystate</state></peer-info></group></result>
         peerstate = Finder.find_item(peerinfo, 'state')
         if peerstate != self.peerstate:

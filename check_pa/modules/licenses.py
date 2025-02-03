@@ -16,17 +16,19 @@ def get_now():
 
 def create_check(args):
     return np.Check(
-        License(args.host, args.token, args.exclude),
+        License(args.host, args.token, args.verify_ssl, args.verbose, args.exclude),
         LicenseContext('license',  args.warn, args.crit),
         LicenseSummary(args.warn,args.crit))
 
 
 class License(np.Resource):
-    def __init__(self, host, token, exclude):
+    def __init__(self, host, token, verify_ssl, verbose, exclude):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = '<request><license><info></info></license></request>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
         self.exclude = str(exclude).split(",")
 
     def probe(self):
@@ -43,7 +45,7 @@ class License(np.Resource):
             difference = date_object - get_now()
             _log.debug('License "%s" difference: %s days' % (
                 name, difference.days))
-            
+
             if name not in self.exclude:
                     yield np.Metric(name, int(difference.days),
                                     context='license', uom="days")
@@ -53,7 +55,7 @@ class LicenseContext(np.Context):
     def fmt_metric(metric,context):
         if metric.value < 0:
             return "{name} expired since {value} {uom}".format(name=metric.name, value=abs(metric.value), uom=metric.uom, valueunit=metric.valueunit, min=metric.min, max=metric.max)
-        else: 
+        else:
             return "{name} expires in {value} {uom}".format(name=metric.name, value=metric.value, uom=metric.uom, valueunit=metric.valueunit, min=metric.min, max=metric.max)
 
     def __init__(self, name, warn, crit,
@@ -94,7 +96,7 @@ class LicenseSummary(np.Summary):
             if result.metric.value < self.warn or result.metric.value < self.crit:
                 l.append(str(result))
             else:
-                ok.append(str(result)) 
+                ok.append(str(result))
         output = ", ".join(l)
         if len(ok) > 0:
             output += "\n"+", ".join(ok)

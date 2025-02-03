@@ -18,20 +18,22 @@ def create_check(args):
     """
 
     check = np.Check()
-    check.add(License(args.host, args.token))
+    check.add(License(args.host, args.token, args.verify_ssl, args.verbose))
     check.add(LicenseContext('alarm'))
     check.add(LicenseSummary())
 
     return check
 
 class License(np.Resource):
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd =  '<request><license><info><%2Finfo' \
                    '>' \
                    '<%2Flicense><%2Frequest>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """
@@ -48,11 +50,11 @@ class License(np.Resource):
             name = Finder.find_item(entry, 'description')
             expires = Finder.find_item(entry, 'expires')
             expired = Finder.find_item(entry, 'expired')
-            
+
             if expired == 'yes':
                 yield np.Metric(f'License with name: {name} has expired!', True, context='alarm')
                 continue
-            
+
             if not expires == 'Never':
                 delta = datetime.strptime(expires, '%B %d, %Y') - present
                 if delta.days < 60:
@@ -60,8 +62,8 @@ class License(np.Resource):
                 else:
                     yield np.Metric(f'License with name: {name} will expire in {delta.days} days.', False, context='alarm')
 
-            
-       
+
+
 class LicenseContext(np.Context):
     def __init__(self, name, fmt_metric='{name} is {valueunit}',
                  result_cls=np.Result):

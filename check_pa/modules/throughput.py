@@ -25,7 +25,7 @@ def get_time():
     """
     return time.time()  # pragma: no cover
 
-def get_all(host, token):
+def get_all(host, token, verify_ssl, verbose):
     """
     Get all interfaces name.
 
@@ -33,7 +33,7 @@ def get_all(host, token):
     """
     interfaces = []
     cmd = '<show><counter><interface>all</interface></counter></show>'
-    xml_obj = XMLReader(host, token, cmd)
+    xml_obj = XMLReader(host, token, verify_ssl, verbose, cmd)
     soup =  xml_obj.read()
     ifnet = soup.find('ifnet')
 
@@ -51,10 +51,10 @@ def create_check(args):
     """
     interfaces = str(args.interface).split(",")
     if interfaces[0] == 'all':
-        interfaces= get_all(args.host, args.token)
+        interfaces= get_all(args.host, args.token, args.verify_ssl, args.verbose)
     check = np.Check()
     for interface in interfaces:
-        check.add(Throughput(args.host, args.token, interface))
+        check.add(Throughput(args.host, args.token, args.verify_ssl, args.verbose, interface))
     for interface in interfaces:
         check.add(np.ScalarContext('in_bps_' + interface, args.warn, args.crit))
     for interface in interfaces:
@@ -76,12 +76,14 @@ class Throughput(np.Resource):
     A throughput resource.
     """
 
-    def __init__(self, host, token, interface_name):
+    def __init__(self, host, token, verify_ssl, verbose, interface_name):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.interface_name = interface_name
         self.cmd = '<show><counter><interface>' + str(self.interface_name) + '</interface></counter></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.cmd)
 
     def probe(self):
         """

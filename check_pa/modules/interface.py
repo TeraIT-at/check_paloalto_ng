@@ -18,28 +18,30 @@ def create_check(args):
     check = np.Check()
     if args.interface:
         interfaces = str(args.interface).split(",")
-        check.add(Interface(args.host, args.token, interfaces=interfaces))
+        check.add(Interface(args.host, args.token, args.verify_ssl, args.verbose, interfaces=interfaces))
     elif args.exclude:
         exclude_interfaces = str(args.exclude).split(",")
-        check.add(Interface(args.host, args.token, exclude_interfaces=exclude_interfaces))
+        check.add(Interface(args.host, args.token, args.verify_ssl, args.verbose, exclude_interfaces=exclude_interfaces))
     else:
-        check.add(Interface(args.host, args.token))
-    
+        check.add(Interface(args.host, args.token, args.verify_ssl))
+
     check.add(InterfaceContext('alarm'))
     check.add(InterfaceSummary())
 
     return check
 
 class Interface(np.Resource):
-    def __init__(self, host, token, interfaces=None, exclude_interfaces=None):
+    def __init__(self, host, token, verify_ssl, verbose, interfaces=None, exclude_interfaces=None):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.interfaces = interfaces
         self.exclude_interfaces = exclude_interfaces
 
         self.cmd =  '<show><interface>all' \
                    '<%2Finterface><%2Fshow>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """
@@ -55,7 +57,7 @@ class Interface(np.Resource):
             name = Finder.find_item(entry, 'name')
             state = Finder.find_item(entry, 'state')
             duplex = Finder.find_item(entry, 'duplex')
-            
+
             if (self.interfaces and name not in self.interfaces) or (self.exclude_interfaces and name in self.exclude_interfaces):
                 continue
 
@@ -69,8 +71,8 @@ class Interface(np.Resource):
                 yield np.Metric(f'Interface with name: {name} is not full duplex, but only: {duplex}', True, context='alarm')
             else:
                 yield np.Metric(f'Interface with name: {name} is full duplex', False, context='alarm')
-            
-       
+
+
 class InterfaceContext(np.Context):
     def __init__(self, name, fmt_metric='{name} is {valueunit}',
                  result_cls=np.Result):

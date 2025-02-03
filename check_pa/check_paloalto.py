@@ -30,10 +30,14 @@ def parse_args(args):
     connection.add_argument('-T', '--token',
                             help='Generated Token for REST-API access',
                             required=True)
+    connection.add_argument('--verify-ssl',
+                            dest='verify_ssl',
+                            help='Enable SSL verification (False if disabled or path to CA bundle file)',
+                            default=False)
 
     debug = parser.add_argument_group('Debug')
     debug.add_argument('-v', '--verbose', action='count', default=0,
-                       help='increase output verbosity (use up to 3 times)')
+                       help='increase output verbosity (use up to 3 times, CAUTION: may expose sensitive information!)')
     debug.add_argument('-t', '--timeout', default=10,
                        help='abort check execution after so many seconds (use 0 for no timeout)')
     debug.add_argument('--reset', action='store_true', help='Deletes the cookie file for the throughput check.')

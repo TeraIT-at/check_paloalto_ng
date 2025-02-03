@@ -26,7 +26,7 @@ def create_check(args):
     :return: the threat check.
     """
     return np.Check(
-        Threat(args.host, args.token),
+        Threat(args.host, args.token, args.verify_ssl, args.verbose),
         np.ScalarContext('threat-release-days', args.warn, args.crit),
         ThreatSummary())
 
@@ -38,11 +38,13 @@ class Threat(np.Resource):
     and critical (e. g. 2).
     """
 
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><system><info></info></system></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

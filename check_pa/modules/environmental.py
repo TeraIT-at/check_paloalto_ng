@@ -16,7 +16,7 @@ def create_check(args):
     :return: the environmental check.
     """
     return np.Check(
-        Environmental(args.host, args.token),
+        Environmental(args.host, args.token, args.verify_ssl, args.verbose),
         EnvironmentalContext('alarm'),
         EnvironmentalSummary())
 
@@ -24,12 +24,14 @@ def create_check(args):
 class Environmental(np.Resource):
     """Reads the used disk space of the Palo Alto Firewall System."""
 
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><system><environmentals>' \
                    '</environmentals></system></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

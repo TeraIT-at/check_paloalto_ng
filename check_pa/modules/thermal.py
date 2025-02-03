@@ -16,18 +16,20 @@ def create_check(args):
     :return: the thermal check.
     """
     return np.Check(
-        Thermal(args.host, args.token),
+        Thermal(args.host, args.token, args.verify_ssl, args.verbose),
         np.ScalarContext('temperature', args.warn, args.crit),
         ThermalSummary())
 
 
 class Thermal(np.Resource):
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><system><environmentals><thermal>' \
                    '</thermal></environmentals></system></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

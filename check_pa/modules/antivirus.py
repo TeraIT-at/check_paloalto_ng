@@ -26,7 +26,7 @@ def create_check(args):
     :return: the antivirus check.
     """
     return np.Check(
-        Antivirus(args.host, args.token),
+        Antivirus(args.host, args.token, args.verify_ssl, args.verbose),
         np.ScalarContext('av-release-days', args.warn, args.crit),
         AntivirusSummary())
 
@@ -38,11 +38,13 @@ class Antivirus(np.Resource):
     and critical (e. g. 2).
     """
 
-    def __init__(self, host, token):
+    def __init__(self, host, token, verify_ssl, verbose):
         self.host = host
         self.token = token
+        self.verify_ssl = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><system><info></info></system></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.verify_ssl, self.verbose, self.cmd)
 
     def probe(self):
         """

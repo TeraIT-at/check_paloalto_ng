@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v0.8.0 (2025-02-03)
+
+### Fix
+
+* fix: do not print url as it contains the api key ([`c7613c9`](https://github.com/TeraIT-at/check_paloalto_ng/commit/c51d12ef6ecaa3e046f5ded93c3bb78cb79c19b7))
+* feat: verify_ssl option (default to false for now)
+
+### Feature
+
 ## v0.7.1 (2023-08-23)
 
 ### Fix

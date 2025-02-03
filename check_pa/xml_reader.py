@@ -8,7 +8,7 @@ from nagiosplugin import CheckError
 class XMLReader:
     """Extracts XML Data from Palo Alto REST API."""
 
-    def __init__(self, host, token, cmd):
+    def __init__(self, host, token, verify_ssl, verbose, cmd):
         """Init XML Reader with required information.
 
         :param host: PaloAlto Firewall
@@ -19,7 +19,9 @@ class XMLReader:
         """
         self.host = host
         self.token = token
+        self.verify_ssl = verify_ssl
         self.cmd = cmd
+        self.verbose = verbose
 
     def read(self):
         """Performs a request with a given command to the XML API and reads
@@ -30,9 +32,12 @@ class XMLReader:
         requests.packages.urllib3.disable_warnings()
 
         try:
-            resp = requests.get(self.build_request_url(), verify=False)
-        except Exception as e:
-            raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
+            resp = requests.get(self.build_request_url(), verify=self.verify_ssl)
+        except requests.RequestException as e:
+            if self.verbose >= 1:
+                raise CheckError("Error connecting to XML API: %s" % str(e))
+            else:
+                raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
 
         if resp.status_code != 200:
             raise CheckError('Expected status code: 200 (OK), returned'
@@ -53,7 +58,7 @@ class XMLReader:
         requests.packages.urllib3.disable_warnings()
 
         try:
-            resp = requests.get(self.build_request_url(report=True), verify=False)
+            resp = requests.get(self.build_request_url(report=True), verify=self.verify_ssl)
         except Exception as e:
             raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
 

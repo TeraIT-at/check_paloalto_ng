@@ -16,7 +16,7 @@ def create_check(args):
     :return: the power-supply check.
     """
     return np.Check(
-        PowerSupply(args.host, args.token, args.min),
+        PowerSupply(args.host, args.token, args.verify_ssl, args.verbose, args.min),
         PowerSupplyAlarmContext('alarm'),
         PowerSupplyInsertedContext('inserted'),
         np.ScalarContext('functional', critical=np.Range("@"+str(args.min-1))),
@@ -27,14 +27,16 @@ def create_check(args):
 class PowerSupply(np.Resource):
     """Reads the information about power supplies of the Palo Alto Firewall System."""
 
-    def __init__(self, host, token, minimum_powersupplies):
+    def __init__(self, host, token, verify_ssl, verbose, minimum_powersupplies):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.minimum_powersupplies = minimum_powersupplies
         self.functional_powersupplies = 0
         self.cmd = '<show><system><environmentals>' \
                    '</environmentals></system></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

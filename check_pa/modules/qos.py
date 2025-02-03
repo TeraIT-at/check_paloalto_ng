@@ -17,7 +17,7 @@ def create_check(args):
     """
 
     return np.Check(
-        Qos(args.host, args.token, args.klass),
+        Qos(args.host, args.token, args.verify_ssl, args.verbose, args.klass),
         np.ScalarContext("qos", args.warn, args.crit),
         QosSummary())
 
@@ -29,12 +29,14 @@ class Qos(np.Resource):
     and critical (e. g. 2).
     """
 
-    def __init__(self, host, token, klass):
+    def __init__(self, host, token, verify_ssl, verbose, klass):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.klass = klass
         self.cmd = "<show><qos><interface><entry name='ae1'><throughput>0</throughput></entry></interface></qos></show>"
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """

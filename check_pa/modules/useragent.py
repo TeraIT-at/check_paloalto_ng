@@ -17,19 +17,21 @@ def create_check(args):
     :return: the useragent check.
     """
     return np.Check(
-        UserAgent(args.host, args.token, args.agent),
+        UserAgent(args.host, args.token, args.verify_ssl, args.verbose, args.agent),
         np.ScalarContext('agent_last_heared', args.warn, args.crit),
         UserAgentContext('agent_connected'),
         UserAgentSummary())
 
 
 class UserAgent(np.Resource):
-    def __init__(self, host, token, agent):
+    def __init__(self, host, token, verify_ssl, verbose, agent):
         self.host = host
         self.token = token
+        self.ssl_verify = verify_ssl
+        self.verbose = verbose
         self.cmd = '<show><user><user-id-agent><state>'+agent+'</state>' \
                    '</user-id-agent></user></show>'
-        self.xml_obj = XMLReader(self.host, self.token, self.cmd)
+        self.xml_obj = XMLReader(self.host, self.token, self.ssl_verify, self.verbose, self.cmd)
 
     def probe(self):
         """
