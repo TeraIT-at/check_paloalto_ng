@@ -28,7 +28,12 @@ class XMLReader:
         :return: The XML output parsed by soup.
         """
         requests.packages.urllib3.disable_warnings()
-        resp = requests.get(self.build_request_url(), verify=False)
+
+        try:
+            resp = requests.get(self.build_request_url(), verify=False)
+        except Exception as e:
+            raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
+
         if resp.status_code != 200:
             raise CheckError('Expected status code: 200 (OK), returned'
                              ' status code was: %d' % resp.status_code)
@@ -46,7 +51,12 @@ class XMLReader:
         :return: The XML output parsed by soup.
         """
         requests.packages.urllib3.disable_warnings()
-        resp = requests.get(self.build_request_url(report=True), verify=False)
+
+        try:
+            resp = requests.get(self.build_request_url(report=True), verify=False)
+        except Exception as e:
+            raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
+
         if resp.status_code != 200:
             raise CheckError('Expected status code: 200 (OK), returned'
                              ' status code was: %d' % resp.status_code)
