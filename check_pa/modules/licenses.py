@@ -41,14 +41,16 @@ class License(np.Resource):
             name = Finder.find_item(license,"feature").strip()
             not_valid_after = Finder.find_item(license,'expires').strip()
             _log.info(name)
-            date_object = datetime.strptime(not_valid_after, '%B %d, %Y')
-            difference = date_object - get_now()
-            _log.debug('License "%s" difference: %s days' % (
-                name, difference.days))
-
-            if name not in self.exclude:
+            if not not_valid_after == 'Never':
+                date_object = datetime.strptime(not_valid_after, '%B %d, %Y')
+                difference = date_object - get_now()
+                _log.debug('License "%s" difference: %s days' % (
+                    name, difference.days))
+                if name not in self.exclude:
                     yield np.Metric(name, int(difference.days),
                                     context='license', uom="days")
+            else:
+                _log.debug('License "%s" never expires', name)
 
 
 class LicenseContext(np.Context):
