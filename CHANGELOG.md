@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.8.1 (2025-11-09)
+
+### Fix
+
+* fix(licenses.py): handle licenses with Never expire correctly
+
 ## v0.8.0 (2025-02-03)
 
 ### Fix

@@ -12,6 +12,7 @@ Contributors
 
 * Thomas Fischer <mail@se-di.de>
 * Rémi Verchère <remi@verchere.fr>
+* HHerrgesell
 
 Special Thanks
 -------------
