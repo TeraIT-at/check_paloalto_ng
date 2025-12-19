@@ -4,7 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 from nagiosplugin import CheckError
 
-
 class XMLReader:
     """Extracts XML Data from Palo Alto REST API."""
 
@@ -39,10 +38,22 @@ class XMLReader:
             else:
                 raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
 
+        # Attempt to parse the response as XML to handle potential error details
+        try:
+            soup = BeautifulSoup(resp.content, "lxml-xml")
+        except Exception as parse_err:
+            if self.verbose >= 1:
+                raise CheckError("Failed to parse XML: %s - HTTP Status: %d - Content: %s" % (str(parse_err), resp.status_code, resp.text[:500]))
+            else:
+                raise CheckError("Failed to parse XML: %s - HTTP Status: %d" % (str(parse_err.__class__.__name__), resp.status_code))
+
         if resp.status_code != 200:
-            raise CheckError('Expected status code: 200 (OK), returned'
-                             ' status code was: %d' % resp.status_code)
-        soup = BeautifulSoup(resp.content, "lxml-xml")
+            try:
+                msg_tag = soup.find('msg')
+                msg = msg_tag.text.strip() if msg_tag else "Unknown error"
+                raise CheckError("HTTP Status: %d - Error: %s" % (resp.status_code, msg))
+            except:
+                raise CheckError('Expected status code: 200 (OK), returned status code was: %d' % resp.status_code)
         result = soup.response['status']
         if result != 'success':
             raise CheckError('Request didn\'t succeed, result was %s'
@@ -62,10 +73,19 @@ class XMLReader:
         except Exception as e:
             raise CheckError("Error connecting to XML API: %s" % str(e.__class__.__name__))
 
+        # Attempt to parse the response as XML to handle potential error details
+        try:
+            soup = BeautifulSoup(resp.content, "lxml-xml")
+        except Exception as parse_err:
+            raise CheckError("Failed to parse XML: %s - HTTP Status: %d" % (str(parse_err.__class__.__name__), resp.status_code))
+
         if resp.status_code != 200:
-            raise CheckError('Expected status code: 200 (OK), returned'
-                             ' status code was: %d' % resp.status_code)
-        soup = BeautifulSoup(resp.content, "lxml-xml")
+            try:
+                msg_tag = soup.find('msg')
+                msg = msg_tag.text.strip() if msg_tag else "Unknown error"
+                raise CheckError("HTTP Status: %d - Error: %s" % (resp.status_code, msg))
+            except:
+                raise CheckError('Expected status code: 200 (OK), returned status code was: %d' % resp.status_code)
         result = soup.report['reportname']
         if result != self.cmd:
             raise CheckError('Request didn\'t succeed, result was %s'
@@ -84,7 +104,6 @@ class XMLReader:
             request_url = 'https://%s/api/?key=%s&type=op&cmd=%s' % (
                 self.host, self.token, self.cmd)
         return request_url
-
 
 class Finder:
     @staticmethod
